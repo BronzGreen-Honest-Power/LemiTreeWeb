@@ -18,6 +18,7 @@ class ViewModel(
     }
 
     suspend fun fetchContent() {
+        _mdText.update { null }
         _mdText.update { getContent() }
     }
 }

@@ -1,6 +1,7 @@
 import androidx.compose.runtime.*
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
+import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.web.css.*
@@ -8,6 +9,7 @@ import org.jetbrains.compose.web.dom.*
 import org.jetbrains.compose.web.renderComposable
 import org.koin.core.context.GlobalContext.startKoin
 import org.koin.dsl.module
+import org.w3c.dom.HTMLElement
 
 external fun examplefunc() // Don't call directly in composables, must match function name in js file
 
@@ -64,10 +66,45 @@ fun main() {
         }
         mdText?.let { text ->
             Div({ style { padding(25.px) } }) {
-                Text(text)
+                MarkDown(text)
             }
         }
     }
+}
+
+/**
+    md-block puts a "rendered" attribute into the <md-block> tag once markdown is rendered.
+    This is useful as it allows styling, e.g. to hide the view before it's been fully rendered.
+    However, this also prevents updating the view on recomposition.
+    So to recompose the markdown view, you must first nullify text state value to remove the
+    <md-block> tag from html before creating a new md-block with a new value in it.
+ */
+@Composable
+fun MarkDown(
+    mdText: String,
+    attrs: AttrBuilderContext<HTMLElement>? = null,
+) {
+    HtmlTag(
+        tagName = "md-block",
+        attrs = attrs,
+    ) {
+        Text(mdText)
+    }
+}
+
+@Composable
+fun HtmlTag(
+    tagName: String,
+    attrs: AttrBuilderContext<HTMLElement>? = null,
+    content: ContentBuilder<HTMLElement>? = null,
+) {
+    TagElement(
+        elementBuilder = {
+            document.createElement(tagName).cloneNode() as HTMLElement
+        },
+        applyAttrs = attrs,
+        content = content,
+    )
 }
 
 @Composable
