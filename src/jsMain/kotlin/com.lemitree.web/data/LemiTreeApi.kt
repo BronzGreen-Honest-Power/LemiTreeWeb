@@ -1,5 +1,6 @@
 package com.lemitree.web.data
 
+import com.lemitree.common.data.TreeItem
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -18,5 +19,5 @@ val jsonClient = HttpClient {
 suspend fun getContent(path: String): String =
     jsonClient.get("$baseUrl/tactics/$path").body()
 
-suspend fun getTree(): List<String> =
+suspend fun getTree(): List<TreeItem> =
     jsonClient.get("$baseUrl/tree").body()

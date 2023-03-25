@@ -1,5 +1,6 @@
 package com.lemitree.server.endpoints
 
+import com.lemitree.common.data.mapToTreeItems
 import com.lemitree.common.helpers.getKoinInstance
 import com.lemitree.server.BASE_DIR
 import com.lemitree.server.runListCommand
@@ -19,8 +20,7 @@ suspend fun PipelineContext<Unit, ApplicationCall>.processTree(
         launch(Dispatchers.IO) {
             val tree = File(baseDir)
                 .runListCommand("du -a | grep -v \\.git | awk -F '\\.\\/' '{print $2}'")
-                .dropLast(1) // Dropping the current dir reference
-                .sorted()
+                .mapToTreeItems()
             println("Tree: $tree")
             call.respond(tree)
         }

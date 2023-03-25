@@ -1,5 +1,6 @@
 package com.lemitree.web
 
+import com.lemitree.common.data.TreeItem
 import com.lemitree.web.data.getContent
 import com.lemitree.web.data.getTree
 import kotlinx.coroutines.CoroutineScope
@@ -12,9 +13,10 @@ import kotlinx.coroutines.launch
 class ViewModel(
     private val scope: CoroutineScope,
 ) {
-    private val _tree = MutableStateFlow<List<String>>(emptyList())
-    val tree: StateFlow<List<String>> = _tree
-    private val _path = MutableStateFlow<String>("Having_-_Resources_-_Means_to_Live/Health/Physical_Health/Sleep/Before_Sleeping/Donts/Caffeine_before_bed.md")
+    private val _tree = MutableStateFlow<List<TreeItem>>(emptyList())
+    val tree: StateFlow<List<TreeItem>> = _tree
+    private val _path = MutableStateFlow<String?>(null)
+    val selectedPath: StateFlow<String?> = _path
     private val _mdText = MutableStateFlow<String?>(null)
     val mdText: StateFlow<String?> = _mdText
     init {
@@ -27,7 +29,8 @@ class ViewModel(
 
     private suspend fun watchPath() {
         _path.collect {
-            fetchContent(it)
+            it ?: return@collect
+            if (it.endsWith(".md")) fetchContent(it)
         }
     }
 
