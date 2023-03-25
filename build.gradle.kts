@@ -54,6 +54,12 @@ kotlin {
                 implementation("io.insert-koin:koin-core:3.3.3")
             }
         }
+        val commonTest by getting {
+            dependencies {
+                implementation("org.jetbrains.kotlin:kotlin-test-common:$kotlinVersion")
+                implementation("org.jetbrains.kotlin:kotlin-test-annotations-common:$kotlinVersion")
+            }
+        }
         val jsMain by getting {
             dependencies {
                 implementation(compose.web.core)
@@ -82,6 +88,11 @@ kotlin {
                 implementation("io.ktor:ktor-server-core-jvm:$ktorVersion")
                 implementation("io.ktor:ktor-server-netty:$ktorVersion")
                 implementation("ch.qos.logback:logback-classic:$logbackVersion")
+            }
+        }
+        val jvmTest by getting {
+            dependencies {
+                implementation("org.jetbrains.kotlin:kotlin-test:$kotlinVersion")
             }
         }
     }
