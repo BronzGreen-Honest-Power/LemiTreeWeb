@@ -1,22 +1,25 @@
-import io.ktor.http.*
-import io.ktor.serialization.kotlinx.json.*
-import io.ktor.server.application.*
-import io.ktor.server.engine.*
-import io.ktor.server.http.content.*
-import io.ktor.server.netty.*
-import io.ktor.server.plugins.compression.*
-import io.ktor.server.plugins.contentnegotiation.*
-import io.ktor.server.plugins.cors.routing.*
-import io.ktor.server.response.*
-import io.ktor.server.routing.*
+import io.ktor.http.HttpMethod
+import io.ktor.http.HttpStatusCode
+import io.ktor.serialization.kotlinx.json.json
+import io.ktor.server.application.call
+import io.ktor.server.application.install
+import io.ktor.server.engine.embeddedServer
+import io.ktor.server.netty.Netty
+import io.ktor.server.plugins.compression.Compression
+import io.ktor.server.plugins.compression.gzip
+import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.server.plugins.cors.routing.CORS
+import io.ktor.server.response.respond
+import io.ktor.server.routing.get
+import io.ktor.server.routing.routing
+import java.io.File
+import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
 import org.koin.ktor.ext.inject
-import java.io.File
-import java.util.concurrent.TimeUnit
 
 val mod = module {
     single { Sesame("quackz") }
@@ -44,51 +47,34 @@ fun main() {
         }
         routing {
             get("/") {
-                call.respondText(
-                    this::class.java.classLoader.getResource("index.html")!!.readText(),
-                    ContentType.Text.Html
-                )
+                call.respond(HttpStatusCode.BadRequest)
             }
-            static("/") {
-                resources("")
-            }
-//            route(ShoppingListItem.path) {
-//                get {
-//                    call.respond(collection.find().toList())
-//                }
-//                post {
-//                    collection.insertOne(call.receive<ShoppingListItem>())
-//                    call.respond(HttpStatusCode.OK)
-//                }
-//                delete("/{id}") {
-//                    val id = call.parameters["id"]?.toInt() ?: error("Invalid delete request")
-//                    collection.deleteOne(ShoppingListItem::id eq id)
-//                    call.respond(HttpStatusCode.OK)
-//                }
-//            }
             val x: Sesame by inject()
             println("AAAAAAAAAAA: ${x.open}")
-            route("/test") {
-                get {
-                    coroutineScope {
-                        launch(Dispatchers.IO) {
-                            val test = File("$baseDir/Human_Individual")
-                                .runCommand("du -a | grep -v git")
-                            println(test)
-                            call.respond(test ?: "Error")
-                        }
+            get("/tree") {
+                coroutineScope {
+                    launch(Dispatchers.IO) {
+                        val test = File(baseDir)
+                            .runCommand("du -a | grep -v \\.git | awk -F '\\t' '{print $2}'")
+                        test?.split("\n")?.forEach { println("quack") }
+                        call.respond(test ?: "Error")
                     }
                 }
             }
-            route("/test2") {
-                get {
-                    coroutineScope {
-                        launch(Dispatchers.IO) {
-                            val test = File("$baseDir/Human_Individual")
-                                .runCommand("cat Having_-_Resources_-_Means_to_Live/Health/Physical_Health/Sleep/Before_Sleeping/Don\\'ts/Smoking_cigarettes.md")
-                            println(test)
-                            call.respond(test ?: "Error")
+            get("/tactics/{path...}") {
+                val path = call.parameters.getAll("path")?.joinToString("/")
+                if (path.isNullOrEmpty()) call.respond("Error: Invalid path")
+                println("path: $path")
+                // todo: secure against tracing path to other files outside of the repo
+                coroutineScope {
+                    launch(Dispatchers.IO) {
+                        val file = File("$baseDir/$path")
+                        val response = when {
+                            !file.exists() -> "Error: File not found"
+                            file.isDirectory -> "Error: This is a directory"
+                            else -> file.bufferedReader().readText()
                         }
+                        call.respond(response)
                     }
                 }
             }
@@ -96,17 +82,34 @@ fun main() {
     }.start(wait = true)
 }
 
+// File(baseDir).runCommand("cat $path")
 fun File.runCommand(
     cmd: String,
     timeoutAmount: Long = 60,
-    timeoutUnit: TimeUnit = TimeUnit.SECONDS
+    timeoutUnit: TimeUnit = TimeUnit.SECONDS,
 ): String? = runCatching {
+    println("Running: $cmd")
     ProcessBuilder("/bin/bash", "-c", cmd)
         .directory(this)
         .redirectOutput(ProcessBuilder.Redirect.PIPE)
-        .redirectError(ProcessBuilder.Redirect.PIPE)
 //        .redirectErrorStream(true)
-        .start().also { it.waitFor(timeoutAmount, timeoutUnit) }
-        .inputStream.bufferedReader().readText()
+        .start()
+        .also { it.waitFor(timeoutAmount, timeoutUnit) }
+        .throwOnFail()
+        .inputStream
+        .bufferedReader()
+        .readText()
 }.onFailure { it.printStackTrace() }.getOrNull()
-//    val errorStream = proc.errorStream.bufferedReader().readText()
+
+fun Process.throwOnFail() = also {
+    if (it.exitValue() == 1) error(it.errorReader().readText())
+}
+
+// File(baseDir).runBoolCommand("[[ -d $path ]] && echo true || echo false")
+fun File.runBoolCommand(
+    cmd: String,
+    timeoutAmount: Long = 60,
+    timeoutUnit: TimeUnit = TimeUnit.SECONDS,
+) = runCommand(cmd, timeoutAmount, timeoutUnit)
+    ?.trimEnd()
+    ?.toBoolean() ?: false
