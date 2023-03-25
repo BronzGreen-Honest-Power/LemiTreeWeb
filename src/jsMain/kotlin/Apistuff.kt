@@ -13,5 +13,8 @@ val jsonClient = HttpClient {
     }
 }
 
-suspend fun getContent(): String =
-    jsonClient.get("$baseUrl/test2").body()
+suspend fun getContent(path: String): String =
+    jsonClient.get("$baseUrl/tactics/$path").body()
+
+suspend fun getTree(): List<String> =
+    jsonClient.get("$baseUrl/tree").body()
