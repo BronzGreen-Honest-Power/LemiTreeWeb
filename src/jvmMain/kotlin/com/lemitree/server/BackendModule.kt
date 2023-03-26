@@ -8,7 +8,7 @@ const val BASE_DIR = "BASE_DIR"
 val backendModule = module {
     single { Sesame("quackz") }
     single(named(BASE_DIR)) {
-//        System.getenv("BASE_DIR_LEMITREE") ?: error("BASE_DIR_LEMITREE env not found!")
-        "/home/d/repos/LemiTree/Human_Individual"
+        System.getenv("BASE_DIR_LEMITREE") ?: error("BASE_DIR_LEMITREE env not found!")
+//        "/home/d/repos/LemiTree/Human_Individual"
     }
 }

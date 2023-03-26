@@ -22,7 +22,7 @@ repositories {
 }
 
 application {
-    mainClass.set("ServerKt")
+    mainClass.set("com.lemitree.server.ServerKt")
 }
 
 kotlin {

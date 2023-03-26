@@ -19,10 +19,15 @@ suspend fun PipelineContext<Unit, ApplicationCall>.processTree(
     coroutineScope {
         launch(Dispatchers.IO) {
             val tree = File(baseDir)
-                .runListCommand("du -a | grep -v \\.git | awk -F '\\.\\/' '{print $2}'")
-                .mapToTreeItems()
+                .runListCommand("du -a")
+                .dropLast(1)
+                .filter { !it.contains(".git") }
+                .map { it.split("./").last() }
             println("Tree: $tree")
-            call.respond(tree)
+            val mappedTree = tree
+                .mapToTreeItems()
+            println("Tree: $mappedTree")
+            call.respond(mappedTree)
         }
     }
 }
