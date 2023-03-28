@@ -1,5 +1,6 @@
 package com.lemitree.server
 
+import com.lemitree.server.endpoints.processNewTactic
 import com.lemitree.server.endpoints.processTactics
 import com.lemitree.server.endpoints.processTree
 import io.ktor.http.HttpStatusCode
@@ -7,6 +8,7 @@ import io.ktor.server.application.Application
 import io.ktor.server.application.call
 import io.ktor.server.response.respond
 import io.ktor.server.routing.get
+import io.ktor.server.routing.post
 import io.ktor.server.routing.routing
 
 fun Application.routingSetup() {
@@ -19,6 +21,9 @@ fun Application.routingSetup() {
         }
         get("/tactics/{path...}") {
             processTactics()
+        }
+        post("/tactic") {
+            processNewTactic()
         }
     }
 }

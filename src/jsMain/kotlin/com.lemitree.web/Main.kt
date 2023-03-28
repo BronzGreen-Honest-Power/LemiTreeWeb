@@ -5,7 +5,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import com.lemitree.common.data.TreeItem
 import com.lemitree.common.helpers.getKoinInstance
@@ -29,6 +28,7 @@ import org.jetbrains.compose.web.css.marginLeft
 import org.jetbrains.compose.web.css.padding
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.width
+import org.jetbrains.compose.web.dom.Button
 import org.jetbrains.compose.web.dom.Div
 import org.jetbrains.compose.web.dom.Input
 import org.jetbrains.compose.web.dom.Span
@@ -54,19 +54,23 @@ fun main() {
 
     renderComposable(rootElementId = "root") {
         console.log("Main started")
-        val scope = rememberCoroutineScope()
         val viewModel: ViewModel = getKoinInstance()
         val mdText by viewModel.mdText.collectAsState()
         val tree by viewModel.tree.collectAsState()
         val selectedPath by viewModel.selectedPath.collectAsState()
+        var newTacticTitle by remember { mutableStateOf("New tactic 1") }
         Layout {
             Div({ style { padding(25.px) } }) {
                 Idk(getKoinInstance())
-                var text by remember { mutableStateOf("Initial value") }
                 Input(type = InputType.Text) {
-                    value(text)
-                    onInput { event -> text = event.value }
+                    value(newTacticTitle)
+                    onInput { event -> newTacticTitle = event.value }
                 }
+            }
+            Button({
+                onClick { viewModel.create(newTacticTitle) }
+            }) {
+                Text("quack")
             }
             Tactic(mdText)
             Tree(

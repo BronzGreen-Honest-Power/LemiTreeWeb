@@ -11,3 +11,10 @@ inline fun <reified T> getKoinInstance(): T = object : KoinComponent {
 inline fun <reified T> getKoinInstance(name: String): T = object : KoinComponent {
     val value: T by inject(named(name))
 }.value
+
+fun <T> List<T>.insertBetween(item: T): List<T> {
+    if (isEmpty()) return this
+    val list = mutableListOf(this.first())
+    drop(1).forEach { list.addAll(listOf(item, it)) }
+    return list
+}
