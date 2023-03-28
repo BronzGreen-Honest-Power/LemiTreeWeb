@@ -103,7 +103,7 @@ private fun TreeItem(
     selectedPath: String?,
     onClickItem: (String) -> Unit,
 ) {
-    val color = if (selectedPath == item.path) Color.blue else Color.black
+    val textColor = if (selectedPath == item.path) Color.blue else Color.black
     var showChildren by remember { mutableStateOf(false) }
     ContainerInSection {
         Span({
@@ -113,7 +113,7 @@ private fun TreeItem(
             }
         }) {
             Div({
-                style { color(color) }
+                style { color(textColor) }
             }) {
                 Text(item.displayName)
             }

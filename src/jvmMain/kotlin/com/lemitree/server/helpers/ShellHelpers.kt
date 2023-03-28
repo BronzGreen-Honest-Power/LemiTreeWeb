@@ -1,4 +1,4 @@
-package com.lemitree.server
+package com.lemitree.server.helpers
 
 import java.io.File
 import java.util.concurrent.TimeUnit
@@ -23,7 +23,7 @@ fun File._runCommand(
         .trimEnd()
 }.onFailure { it.printStackTrace() }.getOrNull()
 
-fun Process.throwOnFail() = also {
+private fun Process.throwOnFail() = also {
     if (it.exitValue() == 1) error(it.errorReader().readText())
 }
 
