@@ -47,16 +47,24 @@ suspend fun PipelineContext<Unit, ApplicationCall>.processNewTactic(
         if (newFile.exists()) {
             val commitMessage = "\"New Tactic: ${fileName}\""
             val branchName = "\"New_Tactic-${tacticName}\""
+            // todo: test process against potential concurrency issues
             val successful = File(baseDir).runCommand<Boolean>(
                 "git checkout master && " +
                 "git checkout -b $branchName && " +
                 "git add -A && " +
                 "git commit -m $commitMessage && " +
                 "git push --set-upstream origin $branchName && " +
-//                "gh pr create --base my-base-branch --head $branchName --title $commitMessage && " +
-                //todo create a pr
+                "gh api --method POST " +
+                        "-H \"Accept: application/vnd.github+json\" " +
+                        "-H \"X-GitHub-Api-Version: 2022-11-28\" " +
+                        "/repos/BronzGreen-Honest-Power/LemiTree/pulls " +
+                        "-f title='$commitMessage' " +
+                        "-f body='$commitMessage' " + //todo make this something more meaningful perhaps
+                        "-f head='$branchName' " +
+                        "-f base='master' && " +
                 "(git checkout master; echo true) || " +
-                "(git reset --hard HEAD; git checkout master; echo false)"
+                // todo: change stashing to resetting once the system is tested
+                "(git add -A && git stash; git checkout master; echo false)"
             )
             if (successful == false) {
                 call.respond(HttpStatusCode.InternalServerError, "Failed to push file to Github.")
