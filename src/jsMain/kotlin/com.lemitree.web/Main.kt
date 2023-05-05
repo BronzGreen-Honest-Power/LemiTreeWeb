@@ -37,21 +37,16 @@ import org.jetbrains.compose.web.renderComposable
 import org.koin.core.context.GlobalContext.startKoin
 import org.koin.dsl.module
 
-external fun examplefunc() // Don't call directly in composables, must match function name in js file
-
 val uiModule = module {
-    single { Sesamez("quackz") }
     single<CoroutineContext> { EmptyCoroutineContext }
     single { CoroutineScope(get()) }
     single { ViewModel(get()) }
 }
-data class Sesamez(val open: String)
 
 fun main() {
     startKoin {
         modules(uiModule)
     }
-
     renderComposable(rootElementId = "root") {
         console.log("Main started")
         val viewModel: ViewModel = getKoinInstance()
@@ -61,7 +56,6 @@ fun main() {
         var newTacticTitle by remember { mutableStateOf("New tactic 1") }
         Layout {
             Div({ style { padding(25.px) } }) {
-                Idk(getKoinInstance())
                 Input(type = InputType.Text) {
                     value(newTacticTitle)
                     onInput { event -> newTacticTitle = event.value }
@@ -162,9 +156,4 @@ private fun Tactic(
             }
         }
     }
-}
-
-@Composable
-fun Idk(x: Sesamez) {
-    Text(x.open)
 }
