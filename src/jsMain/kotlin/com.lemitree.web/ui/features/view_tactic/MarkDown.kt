@@ -1,6 +1,7 @@
-package com.lemitree.web.ui.components
+package com.lemitree.web.ui.features.view_tactic
 
 import androidx.compose.runtime.Composable
+import com.lemitree.web.ui.components.HtmlTag
 import org.jetbrains.compose.web.dom.AttrBuilderContext
 import org.jetbrains.compose.web.dom.Text
 import org.w3c.dom.HTMLElement

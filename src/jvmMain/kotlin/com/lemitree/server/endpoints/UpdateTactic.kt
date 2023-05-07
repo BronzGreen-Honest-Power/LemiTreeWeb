@@ -16,26 +16,32 @@ import java.io.File
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
+suspend fun PipelineContext<Unit, ApplicationCall>.processNewTactic(
+    baseDir: String = getKoinInstance(BASE_DIR)
+) {
+    processEditTactic(baseDir = baseDir, editingAllowed = false)
+}
+
 /**
  * Create file with specification
- * Check file exists
+ * Check file exists & edit permitted
  * Create & checkout branch
  * Commit changes
  * Push branch with commit
  * Create a PR
  * Checkout master again
  * */
-suspend fun PipelineContext<Unit, ApplicationCall>.processNewTactic(
+suspend fun PipelineContext<Unit, ApplicationCall>.processEditTactic(
     baseDir: String = getKoinInstance(BASE_DIR),
+    editingAllowed: Boolean = true,
 ) {
     ioLaunch {
         val tactic = call.receive<Tactic>()
         val fileContent = tactic.toMarkdown()
-        val tacticName = tactic.content.title.replace(' ', '_')
-        val fileName = "${tacticName}.md"
+        val fileName = tactic.fileName
         val filePath = "${baseDir}/${tactic.path}/$fileName"
         val newFile = File(filePath)
-        if (newFile.exists()) {
+        if (newFile.exists() && !editingAllowed) {
             call.respond(HttpStatusCode.Conflict, "Tactic with this name already exists.")
         } else {
             withContext(Dispatchers.IO) {
@@ -45,8 +51,8 @@ suspend fun PipelineContext<Unit, ApplicationCall>.processNewTactic(
             }
         }
         if (newFile.exists()) {
-            val commitMessage = "\"New Tactic: ${fileName}\""
-            val branchName = "\"New_Tactic-${tacticName}\""
+            val commitMessage = "\"New Tactic: $fileName\""
+            val branchName = "\"New_Tactic-${tactic.tacticName}\""
             // todo: test process against potential concurrency issues
             val successful = File(baseDir).runCommand<Boolean>(
                 "git checkout master && " +
@@ -73,3 +79,13 @@ suspend fun PipelineContext<Unit, ApplicationCall>.processNewTactic(
         call.respond(fileContent)
     }
 }
+
+//gh api \
+//  --method POST \
+//  -H "Accept: application/vnd.github+json" \
+//  -H "X-GitHub-Api-Version: 2022-11-28" \
+//  /repos/BronzGreen-Honest-Power/LemiTree/pulls \
+//  -f title='Test PR from server' \
+// -f body='Please pull these awesome changes in!' \
+// -f head='test-branch' \
+// -f base='master'

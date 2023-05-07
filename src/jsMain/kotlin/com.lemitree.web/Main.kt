@@ -1,38 +1,20 @@
 package com.lemitree.web
 
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import com.lemitree.common.data.TreeItem
 import com.lemitree.common.helpers.getKoinInstance
-import com.lemitree.web.ui.components.ContainerInSection
-import com.lemitree.web.ui.components.Layout
-import com.lemitree.web.ui.components.MainContentLayout
-import com.lemitree.web.ui.components.MarkDown
+import com.lemitree.web.ui.components.Column
+import com.lemitree.web.ui.components.SideMenu
+import com.lemitree.web.ui.features.edit_tactic.EditTacticForm
+import com.lemitree.web.ui.features.tree_view.TacticTree
+import com.lemitree.web.ui.features.view_tactic.TacticView
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
 import kotlinx.coroutines.CoroutineScope
-import org.jetbrains.compose.web.attributes.InputType
-import org.jetbrains.compose.web.css.Color
-import org.jetbrains.compose.web.css.DisplayStyle
-import org.jetbrains.compose.web.css.LineStyle
-import org.jetbrains.compose.web.css.backgroundColor
-import org.jetbrains.compose.web.css.border
-import org.jetbrains.compose.web.css.color
-import org.jetbrains.compose.web.css.display
-import org.jetbrains.compose.web.css.fontFamily
-import org.jetbrains.compose.web.css.marginLeft
-import org.jetbrains.compose.web.css.padding
+import org.jetbrains.compose.web.css.Position
+import org.jetbrains.compose.web.css.left
+import org.jetbrains.compose.web.css.position
 import org.jetbrains.compose.web.css.px
-import org.jetbrains.compose.web.css.width
-import org.jetbrains.compose.web.dom.Button
-import org.jetbrains.compose.web.dom.Div
-import org.jetbrains.compose.web.dom.Input
-import org.jetbrains.compose.web.dom.Span
-import org.jetbrains.compose.web.dom.Text
 import org.jetbrains.compose.web.renderComposable
 import org.koin.core.context.GlobalContext.startKoin
 import org.koin.dsl.module
@@ -48,26 +30,12 @@ fun main() {
         modules(uiModule)
     }
     renderComposable(rootElementId = "root") {
-        console.log("Main started")
         val viewModel: ViewModel = getKoinInstance()
         val mdText by viewModel.mdText.collectAsState()
         val tree by viewModel.tree.collectAsState()
         val selectedPath by viewModel.selectedPath.collectAsState()
-        var newTacticTitle by remember { mutableStateOf("New tactic 1") }
-        Layout {
-            Div({ style { padding(25.px) } }) {
-                Input(type = InputType.Text) {
-                    value(newTacticTitle)
-                    onInput { event -> newTacticTitle = event.value }
-                }
-            }
-            Button({
-                onClick { viewModel.create(newTacticTitle) }
-            }) {
-                Text("quack")
-            }
-            Tactic(mdText)
-            Tree(
+        SideMenu {
+            TacticTree(
                 items = tree,
                 selectedPath = selectedPath,
                 onClickItem = {
@@ -75,83 +43,20 @@ fun main() {
                 }
             )
         }
-    }
-}
-
-@Composable
-private fun Tree(
-    items: List<TreeItem>,
-    selectedPath: String?,
-    onClickItem: (String) -> Unit,
-) {
-    MainContentLayout {
-        items.forEach {
-            TreeItem(
-                item = it,
-                selectedPath = selectedPath,
-                onClickItem = onClickItem
-            )
-        }
-    }
-}
-
-@Composable
-private fun TreeItem(
-    item: TreeItem,
-    selectedPath: String?,
-    onClickItem: (String) -> Unit,
-) {
-    val textColor = if (selectedPath == item.path) Color.blue else Color.black
-    var showChildren by remember { mutableStateOf(false) }
-    ContainerInSection {
-        Span({
-            onClick {
-                showChildren = !showChildren
-                onClickItem(item.path)
-            }
-        }) {
-            Div({
-                style { color(textColor) }
-            }) {
-                Text(item.displayName)
-            }
-        }
-        if (showChildren) {
-            Div({
-                style {
-                    marginLeft(16.px)
-                }
-            }) {
-                Tree(
-                    items = item.children,
-                    selectedPath = selectedPath,
-                    onClickItem = onClickItem,
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun Tactic(
-    mdText: String?,
-) {
-    mdText?.let { text ->
-        Div(
-            attrs = {
-                style {
-                    display(DisplayStyle.Flex)
-                    border(5.px, LineStyle.Solid, Color.cadetblue)
-                    padding(25.px)
-                    backgroundColor(Color.aliceblue)
-                }
+        Column(
+            columnStyle = {
+                position(Position.Absolute)
+                left(325.px)
             }
         ) {
-            MarkDown(text) {
-                style {
-//                    property("font-family", "Arial")
-                    width(800.px)
-                    fontFamily("Arial")
+            selectedPath?.let { path ->
+                if (mdText == null) {
+                    EditTacticForm(
+                        selectedPath = path,
+                        onClickSubmit = { newTactic ->  viewModel.create(newTactic) }
+                    )
+                } else {
+                    TacticView(mdText!!)
                 }
             }
         }

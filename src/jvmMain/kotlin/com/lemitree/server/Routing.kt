@@ -23,7 +23,7 @@ fun Application.routingSetup() {
             processTactics()
         }
         post("/tactic") {
-            processNewTactic()
+            processNewTactic() //todo allow editing existing
         }
     }
 }

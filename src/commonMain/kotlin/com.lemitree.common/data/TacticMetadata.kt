@@ -1,5 +1,6 @@
 package com.lemitree.common.data
 
+import com.lemitree.common.helpers.titlecase
 import kotlinx.serialization.Serializable
 
 // todo: write tests
@@ -14,7 +15,16 @@ data class TacticMetadata(
     val timeDuration: TimeDuration?,
     val expenses: Expenses?,
     val energy: Energy?,
-)
+) {
+    companion object {
+        val EMPTY get() = TacticMetadata(
+            frequency = null,
+            timeDuration = null,
+            expenses = null,
+            energy = null,
+        )
+    }
+}
 
 fun TacticMetadata?.encode(): String {
     this ?: return "U"
@@ -39,13 +49,22 @@ data class Frequency(
         code + type.code + interval
 }
 
-enum class FrequencyType(val code: String) {
+enum class FrequencyType(val code: String) : DropdownItem {
     LIFETIME("L"),
     DAYS("D"),
     WEEKS("W"),
     MONTHS("M"),
     QUARTERS("Q"),
     YEARS("Y");
+
+    companion object {
+        fun fromString(s: String): FrequencyType = values().first { it.name.uppercase() == s.uppercase() }
+        fun displayNames() = values().map { it.displayText }
+        fun names() = values().map { it.name }
+    }
+
+    override val displayText: String
+        get() = name.titlecase()
 }
 
 @Serializable
@@ -88,6 +107,10 @@ data class Energy(
         const val code = "E"
         const val physicalCode = "P"
         const val mentalCode = "M"
+        val EMPTY get() = Energy(
+            physicalCost = null,
+            mentalCost = null,
+        )
     }
     override fun encode(): String {
         val physicalEncoded = if (physicalCost == null) "" else physicalCode + physicalCost.code
@@ -96,8 +119,17 @@ data class Energy(
     }
 }
 
-enum class EnergyCost(val code: String) {
+enum class EnergyCost(val code: String) : DropdownItem {
     LOW("L"),
     AVERAGE("A"),
     HIGH("H");
+
+    companion object {
+        fun fromString(s: String): EnergyCost = values().first { it.name.uppercase() == s.uppercase() }
+        fun displayNames() = values().map { it.displayText }
+        fun names() = values().map { it.name }
+    }
+
+    override val displayText: String
+        get() = name.titlecase()
 }

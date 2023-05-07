@@ -1,9 +1,6 @@
 package com.lemitree.web
 
-import com.lemitree.common.data.Instruction
-import com.lemitree.common.data.Source
 import com.lemitree.common.data.Tactic
-import com.lemitree.common.data.TacticContent
 import com.lemitree.common.data.TreeItem
 import com.lemitree.web.data.createTactic
 import com.lemitree.web.data.getContent
@@ -36,34 +33,22 @@ class ViewModel(
         _path.collect {
             it ?: return@collect
             if (it.endsWith(".md")) fetchContent(it)
+            else _mdText.update { null }
         }
     }
 
-    suspend fun fetchContent(path: String) {
+    private suspend fun fetchContent(path: String) {
         _mdText.update { null }
         _mdText.update { getContent(path) }
     }
 
-    suspend fun fetchTree() {
+    private suspend fun fetchTree() {
         _tree.update { getTree() }
     }
 
     fun updatePath(path: String) = _path.update { path }
 
-    fun create(title: String) = scope.launch {
-        val newTactic = Tactic(
-            path = "Having_-_Resources_-_Means_to_Live/Money",
-            content = TacticContent(
-                title = title,
-                intro = "This is just a test tactic generated from code.",
-                why = "Because we need to test the API, of course.",
-                benefits = listOf("Well, if it works, the project is one step closer to being live."),
-                how = "Via the magic of programming.",
-                instructions = listOf(Instruction("Instruction 1", "Well, if you're reading this then it works and nothing else to be done.", listOf("Brag", "Brag even more"))),
-                sources = listOf(Source("Source title example", "https://lemitree.com"))
-            ),
-            metadata = null,
-        )
-        createTactic(newTactic)
+    fun create(tactic: Tactic) = scope.launch {
+        createTactic(tactic)
     }
 }
