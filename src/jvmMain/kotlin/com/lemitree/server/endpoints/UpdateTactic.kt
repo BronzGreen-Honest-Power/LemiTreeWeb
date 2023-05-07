@@ -57,23 +57,24 @@ suspend fun PipelineContext<Unit, ApplicationCall>.processEditTactic(
             }
         }
         if (newFile.exists()) {
-            val commitMessage = "\"New Tactic: $fileName\""
-            val branchName = "\"New_Tactic-${tactic.tacticName}\""
+            val commitMessage = "New Tactic: $fileName"
+            val branchName = "New_Tactic-${tactic.tacticName}"
             // todo: test process against potential concurrency issues
             val successful = File(baseDir).runCommand<Boolean>(
+                // todo: this command is a bit long, consider extracting it to a proper script
                 "git checkout master && " +
                 "git checkout -b $branchName && " +
                 "git add -A && " +
-                "git commit -m $commitMessage && " +
+                "git commit -m \"$commitMessage\" && " +
                 "git push --set-upstream origin $branchName && " +
-                "gh api --method POST " +
-                        "-H \"Accept: application/vnd.github+json\" " +
-                        "-H \"X-GitHub-Api-Version: 2022-11-28\" " +
-                        "/repos/BronzGreen-Honest-Power/LemiTree/pulls " +
-                        "-f title='$commitMessage' " +
-                        "-f body='$commitMessage' " + //todo make this something more meaningful perhaps
-                        "-f head='$branchName' " +
-                        "-f base='master' && " +
+                "gh api --method POST " + // todo: this method will return 0 even if unsuccessful, validate response
+                    "-H \"Accept: application/vnd.github+json\" " +
+                    "-H \"X-GitHub-Api-Version: 2022-11-28\" " +
+                    "/repos/BronzGreen-Honest-Power/LemiTree/pulls " +
+                    "-f title=\"$commitMessage\" " +
+                    "-f body=\"$commitMessage\" " + //todo make this something more meaningful perhaps
+                    "-f head=\"$branchName\" " +
+                    "-f base=\"master\" && " +
                 "(git checkout master; echo true) || " +
                 // todo: change stashing to resetting once the system is tested
                 "(git add -A && git stash; git checkout master; echo false)"
