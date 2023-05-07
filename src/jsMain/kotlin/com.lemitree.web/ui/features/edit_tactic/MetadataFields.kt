@@ -87,7 +87,7 @@ private fun FrequencyFields(
             contentStyle = { width(fieldWidth.px) }
         )
         LemiNumberTextField(
-            value = frequencyInterval.toString(),
+            text = frequencyInterval.toString(),
             onValueChanged = { frequencyInterval = it?.toInt() },
             contentStyle = { width(fieldWidth.px) }
         )
@@ -112,14 +112,14 @@ private fun TimeDurationFields(
     Text("Time duration:")
     Row {
         LemiNumberTextField(
-            placeholder = "Hours",
-            value = durationHours?.toString() ?: "",
+            hint = "Hours",
+            text = durationHours?.toString() ?: "",
             onValueChanged = { durationHours = it?.toInt() },
             contentStyle = { width(fieldWidth.px) }
         )
         LemiNumberTextField(
-            placeholder = "Minutes",
-            value = durationMinutes?.toString() ?: "",
+            hint = "Minutes",
+            text = durationMinutes?.toString() ?: "",
             onValueChanged = {
                 durationMinutes = it?.let {
                     val value = it.toInt()
@@ -157,8 +157,8 @@ private fun ExpensesFields(
     Column {
         Row {
             LemiNumberTextField(
-                placeholder = "Cost in $",
-                value = expensesAmount?.toString() ?: "",
+                hint = "Cost in $",
+                text = expensesAmount?.toString() ?: "",
                 onValueChanged = { expensesAmount = it?.toInt() },
                 contentStyle = { width(fieldWidth.px) }
             )
@@ -177,7 +177,7 @@ private fun ExpensesFields(
                     contentStyle = { width(fieldWidth.px) }
                 )
                 LemiNumberTextField(
-                    value = expensesFrequencyInterval.toString(),
+                    text = expensesFrequencyInterval.toString(),
                     onValueChanged = { expensesFrequencyInterval = it?.toInt() },
                     contentStyle = { width(fieldWidth.px) }
                 )

@@ -1,5 +1,6 @@
 package com.lemitree.common.data
 
+import com.lemitree.common.helpers.ifNotEmpty
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -16,7 +17,7 @@ data class Tactic(
         )
     }
     val tacticName get() = content.title.replace(' ', '_')
-    val fileName get() = "$tacticName.md"
+    val fileName get() = tacticName.ifNotEmpty { "$it.md" }
 }
 
 @Serializable

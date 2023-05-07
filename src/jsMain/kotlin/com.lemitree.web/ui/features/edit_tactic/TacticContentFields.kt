@@ -36,7 +36,7 @@ fun TacticContentFields(
     )
     Text("Introduction:")
     LemiMultilineTextField(
-        value = intro,
+        text = intro,
         onValueChanged = {
             intro = it
             onTacticContentChanged(content.copy(intro = intro))
@@ -46,7 +46,7 @@ fun TacticContentFields(
     }
     Text("Why:")
     LemiMultilineTextField(
-        value = why,
+        text = why,
         onValueChanged = {
             why = it
             onTacticContentChanged(content.copy(why = why))
@@ -60,7 +60,7 @@ fun TacticContentFields(
     )
     Text("How:")
     LemiMultilineTextField(
-        value = how,
+        text = how,
         onValueChanged = {
             how = it
             onTacticContentChanged(content.copy(how = how))
@@ -93,7 +93,7 @@ private fun BenefitsFields(
         onValueChanged = { fields = it },
         fieldContent = { benefit, onFieldValueChanged ->
             LemiMultilineTextField(
-                value = benefit,
+                text = benefit,
                 onValueChanged = { onFieldValueChanged(it) }
             ) {
                 width(fieldWidth.px)
@@ -123,14 +123,14 @@ private fun InstructionsFields(
             val newInstruction = instruction ?: Instruction.EMPTY
             Column {
                 LemiMultilineTextField(
-                    value = instruction?.title,
-                    placeholder = "Title",
+                    text = instruction?.title,
+                    hint = "Title",
                     onValueChanged = { onFieldValueChanged(newInstruction.copy(title = it)) },
                     contentStyle = { width(fieldWidth.px) },
                 )
                 LemiMultilineTextField(
-                    value = instruction?.text,
-                    placeholder = "Description",
+                    text = instruction?.text,
+                    hint = "Description",
                     onValueChanged = { onFieldValueChanged(newInstruction.copy(text = it)) },
                     contentStyle = { width(fieldWidth.px) },
                 )
@@ -147,7 +147,7 @@ private fun InstructionsFields(
                     onValueChanged = { bulletPoints = it },
                     fieldContent = { bulletPoint, onBPFieldValueChanged ->
                         LemiMultilineTextField(
-                            value = bulletPoint,
+                            text = bulletPoint,
                             onValueChanged = { onBPFieldValueChanged(it) },
                             contentStyle = { width(fieldWidth.px) },
                         )
@@ -178,14 +178,14 @@ private fun SourcesFields(
             val newSource = source ?: Source.EMPTY
             Row {
                 LemiTextField(
-                    value = source?.title,
-                    placeholder = "Title",
+                    text = source?.title,
+                    hint = "Title",
                     onValueChanged = { onFieldValueChanged(newSource.copy(title = it)) },
                     contentStyle = { width(fieldWidth.px) },
                 )
                 LemiTextField(
-                    value = source?.link,
-                    placeholder = "Link",
+                    text = source?.link,
+                    hint = "Link",
                     onValueChanged = { onFieldValueChanged(newSource.copy(link = it)) },
                     contentStyle = { width(fieldWidth.px) },
                 )
@@ -206,7 +206,7 @@ private fun ExternalResourcesFields(
     var audioLink by remember { mutableStateOf(content.audioLink) }
     Text("Infographic:")
     LemiTextField(
-        value = infographicLink,
+        text = infographicLink,
         onValueChanged = {
             infographicLink = it
             onInfographicChanged(it)
@@ -216,7 +216,7 @@ private fun ExternalResourcesFields(
     }
     Text("Video:")
     LemiTextField(
-        value = videoLink,
+        text = videoLink,
         onValueChanged = {
             videoLink = it
             onVideoChanged(it)
@@ -226,7 +226,7 @@ private fun ExternalResourcesFields(
     }
     Text("Audio:")
     LemiTextField(
-        value = audioLink,
+        text = audioLink,
         onValueChanged = {
             audioLink = it
             onAudioChanged(it)

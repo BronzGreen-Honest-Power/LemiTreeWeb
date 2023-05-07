@@ -31,27 +31,19 @@ fun EditTacticForm(
     onClickSubmit: (Tactic) -> Unit,
 ) {
     var newTactic by remember { mutableStateOf(tactic) }
-    var title by remember { mutableStateOf("") }
     var metadata by remember { mutableStateOf(tactic.metadata) }
     var content by remember { mutableStateOf(tactic.content) }
-    remember(title) {
-        if (title.isNotEmpty()) {
-            content = newTactic.content.copy(title = title)
-        }
-    }
-    remember(metadata, content, title) {
-        if (title.isNotEmpty()) {
-            newTactic = tactic.copy(
-                path = "$selectedPath/${newTactic.fileName}",
-                content = content,
-                metadata = metadata,
-            )
-        }
+    remember(metadata, content) {
+        newTactic = tactic.copy(
+            path = selectedPath,
+            content = content,
+            metadata = metadata,
+        )
     }
     Column {
         Text("Path:")
         LemiTextField(
-            value = selectedPath,
+            text = "$selectedPath/${newTactic.fileName}",
             readonly = true,
         ) {
             textFieldStyle()
@@ -59,8 +51,8 @@ fun EditTacticForm(
         }
         Text("Title:")
         LemiTextField(
-            value = content.title,
-            onValueChanged = { title = it },
+            text = content.title,
+            onValueChanged = { content = content.copy(title = it) },
         ) {
             textFieldStyle()
         }

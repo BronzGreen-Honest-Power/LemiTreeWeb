@@ -37,6 +37,7 @@ suspend fun PipelineContext<Unit, ApplicationCall>.processEditTactic(
 ) {
     ioLaunch {
         val tactic = call.receive<Tactic>()
+        println("Received tactic:\n$tactic")
         val fileContent = tactic.toMarkdown()
         val fileName = tactic.fileName
         val filePath = "${baseDir}/${tactic.path}/$fileName"
@@ -45,8 +46,13 @@ suspend fun PipelineContext<Unit, ApplicationCall>.processEditTactic(
             call.respond(HttpStatusCode.Conflict, "Tactic with this name already exists.")
         } else {
             withContext(Dispatchers.IO) {
+                println("Creating file: $filePath")
                 newFile.createNewFile().also {
-                    if (it) newFile.writeText(fileContent)
+                    if (it) {
+                        println("Writing content of $filePath:")
+                        println(fileContent)
+                        newFile.writeText(fileContent)
+                    }
                 }
             }
         }

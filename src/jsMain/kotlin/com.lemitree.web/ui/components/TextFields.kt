@@ -14,10 +14,10 @@ import org.jetbrains.compose.web.dom.TextArea
 
 @Composable
 fun LemiTextField(
-    value: String?,
+    text: String?,
     onValueChanged: (String) -> Unit = {},
     readonly: Boolean = false,
-    placeholder: String = "",
+    hint: String = "",
     onFieldClicked: () -> Unit = {},
     contentStyle: StyleScope.() -> Unit = {},
 ) {
@@ -26,8 +26,8 @@ fun LemiTextField(
             style {
                 contentStyle()
             }
-            placeholder(placeholder)
-            value(value ?: "")
+            placeholder(hint)
+            value(text ?: "")
             onClick { onFieldClicked() }
             if (readonly) readOnly()
             else onInput { event -> onValueChanged(event.value) }
@@ -37,9 +37,9 @@ fun LemiTextField(
 
 @Composable
 fun LemiNumberTextField(
-    value: String?,
+    text: String?,
     onValueChanged: (Number?) -> Unit,
-    placeholder: String = "",
+    hint: String = "",
     contentStyle: StyleScope.() -> Unit = {},
 ) {
     Div {
@@ -47,8 +47,8 @@ fun LemiNumberTextField(
             style {
                 contentStyle()
             }
-            value(value ?: "")
-            placeholder(placeholder)
+            value(text ?: "")
+            placeholder(hint)
             onInput { event -> onValueChanged(event.value) }
         }
     }
@@ -56,9 +56,9 @@ fun LemiNumberTextField(
 
 @Composable
 fun LemiMultilineTextField(
-    value: String?,
+    text: String?,
     onValueChanged: (String) -> Unit,
-    placeholder: String = "",
+    hint: String = "",
     lines: Int = 2,
     contentStyle: StyleScope.() -> Unit = {},
 ) {
@@ -67,8 +67,8 @@ fun LemiMultilineTextField(
             style {
                 contentStyle()
             }
-            value(value ?: "")
-            placeholder(placeholder)
+            value(text ?: "")
+            placeholder(hint)
             rows(lines)
             wrap(TextAreaWrap.Soft)
             onInput { event -> onValueChanged(event.value) }
