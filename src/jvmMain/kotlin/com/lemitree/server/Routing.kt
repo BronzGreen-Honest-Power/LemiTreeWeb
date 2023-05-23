@@ -1,5 +1,6 @@
 package com.lemitree.server
 
+import com.lemitree.server.endpoints.processNewCategory
 import com.lemitree.server.endpoints.processNewTactic
 import com.lemitree.server.endpoints.processTactics
 import com.lemitree.server.endpoints.processTree
@@ -24,6 +25,9 @@ fun Application.routingSetup() {
         }
         post("/tactic") {
             processNewTactic() //todo allow editing existing
+        }
+        post("/category") {
+            processNewCategory() //todo allow editing existing
         }
     }
 }

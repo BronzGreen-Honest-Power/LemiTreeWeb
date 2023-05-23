@@ -5,7 +5,7 @@ import androidx.compose.runtime.getValue
 import com.lemitree.common.helpers.getKoinInstance
 import com.lemitree.web.ui.components.Column
 import com.lemitree.web.ui.components.SideMenu
-import com.lemitree.web.ui.features.edit_tactic.EditTacticForm
+import com.lemitree.web.ui.features.edit_content.EditContent
 import com.lemitree.web.ui.features.tree_view.TacticTree
 import com.lemitree.web.ui.features.view_tactic.TacticView
 import kotlin.coroutines.CoroutineContext
@@ -51,9 +51,10 @@ fun main() {
         ) {
             selectedPath?.let { path ->
                 if (mdText == null) {
-                    EditTacticForm(
-                        selectedPath = path,
-                        onClickSubmit = { newTactic ->  viewModel.create(newTactic) }
+                    EditContent(
+                        path = path,
+                        onClickEditTactic = { newTactic ->  viewModel.editTactic(newTactic) },
+                        onClickCreateCategory = { newPath -> viewModel.createCategory(newPath) },
                     )
                 } else {
                     TacticView(mdText!!)
@@ -62,3 +63,5 @@ fun main() {
         }
     }
 }
+
+enum class ElementType { TACTIC, CATEGORY }
