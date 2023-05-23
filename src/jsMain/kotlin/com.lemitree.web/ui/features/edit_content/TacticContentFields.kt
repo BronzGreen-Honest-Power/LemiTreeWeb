@@ -1,4 +1,4 @@
-package com.lemitree.web.ui.features.edit_tactic
+package com.lemitree.web.ui.features.edit_content
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue

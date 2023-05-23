@@ -1,4 +1,4 @@
-package com.lemitree.web.ui.features.edit_tactic
+package com.lemitree.web.ui.features.edit_content
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -17,7 +17,7 @@ import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.width
 import org.jetbrains.compose.web.dom.Text
 
-private const val columnWidth = 800
+const val columnWidth = 800
 val textFieldStyle: StyleScope.() -> Unit = {
     marginTop(10.px)
     marginBottom(10.px)

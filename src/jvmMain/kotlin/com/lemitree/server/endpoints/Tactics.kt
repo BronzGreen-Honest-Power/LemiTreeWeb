@@ -15,7 +15,7 @@ suspend fun PipelineContext<Unit, ApplicationCall>.processTactics(
     val path = call.parameters.getAll("path")?.joinToString("/")
     if (path.isNullOrEmpty()) call.respond("Error: Invalid path")
     println("path: $path")
-    // todo: secure against tracing path to other files outside of the repo
+    // todo: secure against tracing path to other files outside the repo
     ioLaunch {
         val file = File("$baseDir/$path")
         val response = when {

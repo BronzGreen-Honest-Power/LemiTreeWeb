@@ -31,8 +31,15 @@ suspend fun getContent(path: String): String =
 suspend fun getTree(): List<TreeItem> =
     jsonClient.get("$baseUrl/tree").body()
 
-suspend fun createTactic(newTactic: Tactic): String =
+suspend fun modifyTactic(newTactic: Tactic) =
     jsonClient.post("$baseUrl/tactic") {
         contentType(ContentType.Application.Json)
         setBody(newTactic)
-    }.body()
+    }
+
+suspend fun modifyCategory(newCategoryPath: String) =
+    jsonClient.post("$baseUrl/category") {
+        setBody(newCategoryPath)
+    }
+
+// todo: Proper success/fail responses

@@ -2,9 +2,10 @@ package com.lemitree.web
 
 import com.lemitree.common.data.Tactic
 import com.lemitree.common.data.TreeItem
-import com.lemitree.web.data.createTactic
+import com.lemitree.web.data.modifyTactic
 import com.lemitree.web.data.getContent
 import com.lemitree.web.data.getTree
+import com.lemitree.web.data.modifyCategory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -48,7 +49,11 @@ class ViewModel(
 
     fun updatePath(path: String) = _path.update { path }
 
-    fun create(tactic: Tactic) = scope.launch {
-        createTactic(tactic)
+    fun editTactic(tactic: Tactic) = scope.launch {
+        modifyTactic(tactic)
+    }
+
+    fun createCategory(path: String) = scope.launch {
+        modifyCategory(path)
     }
 }
