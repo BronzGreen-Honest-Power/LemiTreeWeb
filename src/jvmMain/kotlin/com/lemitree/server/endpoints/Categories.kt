@@ -36,7 +36,7 @@ suspend fun PipelineContext<Unit, ApplicationCall>.processEditCategory(
         @Suppress("BlockingMethodInNonBlockingContext")
         newFile.createNewFile()
     }
-    if (newDirectory.exists() && newDirectory.isDirectory)
+    if (newDirectory.exists() && newDirectory.isDirectory && newFile.exists())
         createPullRequest(
             baseDir = baseDir,
             branchName = "New_Category-${categoryPath}",
