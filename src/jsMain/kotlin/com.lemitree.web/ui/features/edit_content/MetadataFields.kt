@@ -87,6 +87,7 @@ private fun FrequencyFields(
             contentStyle = { width(fieldWidth.px) }
         )
         LemiNumberTextField(
+            hint = "Interval",
             text = frequencyInterval.toString(),
             onValueChanged = { frequencyInterval = it?.toInt() },
             contentStyle = { width(fieldWidth.px) }
@@ -157,11 +158,14 @@ private fun ExpensesFields(
     Column {
         Row {
             LemiNumberTextField(
-                hint = "Cost in $",
+                hint = "Cost in $ (round to whole number)",
                 text = expensesAmount?.toString() ?: "",
                 onValueChanged = { expensesAmount = it?.toInt() },
                 contentStyle = { width(fieldWidth.px) }
             )
+        }
+        Row {
+            Text("Recurring expense?")
             CheckboxInput {
                 style { padding(25.px) }
                 checked(expensesRepeating)
@@ -177,6 +181,7 @@ private fun ExpensesFields(
                     contentStyle = { width(fieldWidth.px) }
                 )
                 LemiNumberTextField(
+                    hint = "Interval",
                     text = expensesFrequencyInterval.toString(),
                     onValueChanged = { expensesFrequencyInterval = it?.toInt() },
                     contentStyle = { width(fieldWidth.px) }
@@ -203,17 +208,23 @@ private fun EnergyFields(
     }
     Text("Energy:")
     Row {
-        DropdownMenu(
-            items = EnergyCost.displayNames(),
-            selected = energy?.physicalCost?.name,
-            onItemSelected = { physicalEnergy = EnergyCost.fromString(it) },
-            contentStyle = { width(fieldWidth.px) }
-        )
-        DropdownMenu(
-            items = EnergyCost.displayNames(),
-            selected = energy?.mentalCost?.name,
-            onItemSelected = { mentalEnergy = EnergyCost.fromString(it) },
-            contentStyle = { width(fieldWidth.px) }
-        )
+        Column {
+            Text("Physical:")
+            DropdownMenu(
+                items = EnergyCost.displayNames(),
+                selected = energy?.physicalCost?.name,
+                onItemSelected = { physicalEnergy = EnergyCost.fromString(it) },
+                contentStyle = { width(fieldWidth.px) }
+            )
+        }
+        Column {
+            Text("Mental:")
+            DropdownMenu(
+                items = EnergyCost.displayNames(),
+                selected = energy?.mentalCost?.name,
+                onItemSelected = { mentalEnergy = EnergyCost.fromString(it) },
+                contentStyle = { width(fieldWidth.px) }
+            )
+        }
     }
 }
