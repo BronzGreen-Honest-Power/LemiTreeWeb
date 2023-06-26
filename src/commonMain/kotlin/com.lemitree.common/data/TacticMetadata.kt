@@ -37,6 +37,21 @@ fun TacticMetadata?.encode(): String {
         else encodedTagsList.joinToString(",")
 }
 
+fun String.decodeMetadata(): TacticMetadata? {
+    isEmpty() || equals("U") && return null
+    var metadata = TacticMetadata.EMPTY
+    split(",").forEach { tag ->
+        val tagData = tag.drop(1)
+        when (tag.first().toString()) {
+            Frequency.code -> metadata = metadata.copy(frequency = Frequency.decode(tagData))
+            Expenses.code -> metadata = metadata.copy(expenses = Expenses.decode(tagData))
+            Energy.code -> metadata = metadata.copy(energy = Energy.decode(tagData))
+            TimeDuration.code -> {}
+        }
+    }
+    return metadata //todo var?
+}
+
 @Serializable
 data class Frequency(
     val type: FrequencyType,
@@ -44,9 +59,13 @@ data class Frequency(
 ) : Metadata {
     companion object {
         const val code = "F"
+        fun decode(tag: String) = Frequency(
+            type = FrequencyType.fromCode(tag.first().toString()),
+            interval = tag.drop(1).toIntOrNull() ?: 0
+        )
     }
     override fun encode(): String =
-        code + type.code + interval
+        code + type.code + if (interval > 1) interval else ""
 }
 
 enum class FrequencyType(val code: String) : DropdownItem {
@@ -59,6 +78,7 @@ enum class FrequencyType(val code: String) : DropdownItem {
 
     companion object {
         fun fromString(s: String): FrequencyType = values().first { it.name.uppercase() == s.uppercase() }
+        fun fromCode(code: String) = values().first { it.code == code }
         fun displayNames() = values().map { it.displayText }
         fun names() = values().map { it.name }
     }
@@ -91,6 +111,17 @@ data class Expenses(
 ) : Metadata {
     companion object {
         const val code = "X"
+        private fun String.frequencyIndex() = indexOfFirst { it.digitToIntOrNull() == null }
+        private fun String.frequencyTypeCode() = find { it.digitToIntOrNull() == null }
+        fun decode(tag: String) = Expenses(
+            cost = tag.frequencyTypeCode()?.let { tag.split(it).first().toIntOrNull() } ?: tag.toIntOrNull() ?: 0,
+            frequency = tag.frequencyTypeCode()?.let {
+                Frequency(
+                    type = FrequencyType.fromCode(it.toString()),
+                    interval = (tag.drop(tag.frequencyIndex() + 1)).toIntOrNull() ?: 0,
+                )
+            }
+        )
     }
     override fun encode(): String {
         val frequencyEncoded = if (frequency == null) "" else frequency.type.code + frequency.interval
@@ -111,6 +142,10 @@ data class Energy(
             physicalCost = null,
             mentalCost = null,
         )
+        fun decode(tag: String) = Energy(
+            physicalCost = EnergyCost.fromCode(tag.tagValue(physicalCode)),
+            mentalCost = EnergyCost.fromCode(tag.tagValue(mentalCode))
+        )
     }
     override fun encode(): String {
         val physicalEncoded = if (physicalCost == null) "" else physicalCode + physicalCost.code
@@ -128,8 +163,19 @@ enum class EnergyCost(val code: String) : DropdownItem {
         fun fromString(s: String): EnergyCost = values().first { it.name.uppercase() == s.uppercase() }
         fun displayNames() = values().map { it.displayText }
         fun names() = values().map { it.name }
+        fun fromCode(tag: String?): EnergyCost? = tag?.let { code ->
+            values().firstOrNull { code.first().toString() == it.code }
+        }
     }
 
     override val displayText: String
         get() = name.titlecase()
+}
+
+private fun String.tagValue(code: String): String? {
+    val codeIndex = indexOf(code)
+        .takeIf { it >= 0 }
+        ?: return null
+    val valueIndex = codeIndex + 1
+    return this[valueIndex].toString()
 }
