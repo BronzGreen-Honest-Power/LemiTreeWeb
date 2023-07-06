@@ -1,12 +1,31 @@
 package com.lemitree.common
 
+import com.lemitree.common.data.extractMetadata
+import com.lemitree.common.data.extractTitle
 import kotlin.test.Test
+import kotlin.test.assertEquals
 
 internal class TacticMdReverseMapperTest {
 
     @Test
     fun testMapMdStringToTacticContent() {
 
+    }
+
+    @Test
+    fun testExtractTitle() {
+        assertEquals(
+            expected = "Nasal breathing at night",
+            actual = exampleTacticMd.extractTitle(),
+        )
+    }
+
+    @Test
+    fun testExtractMetadata() {
+        assertEquals(
+            expected = "FL, X100D10, EPLMH",
+            actual = exampleTacticMd.extractMetadata(),
+        )
     }
 
 }

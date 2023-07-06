@@ -16,4 +16,6 @@ fun String.toTacticContent(): TacticContent {
     )
 }
 
-private fun String.extractTitle() = first { startsWith("# **") && endsWith("**") }
+fun String.extractTitle() = split("# **")[1].split("**").first()
+
+fun String.extractMetadata() = lines().first().split("(")[1].split(")").first()
