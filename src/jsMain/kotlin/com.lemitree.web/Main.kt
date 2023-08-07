@@ -63,5 +63,3 @@ fun main() {
         }
     }
 }
-
-enum class ElementType { TACTIC, CATEGORY }
