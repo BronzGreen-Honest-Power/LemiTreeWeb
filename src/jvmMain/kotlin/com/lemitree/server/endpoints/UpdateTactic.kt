@@ -57,7 +57,7 @@ suspend fun PipelineContext<Unit, ApplicationCall>.processEditTactic(
             baseDir = baseDir,
             branchName = "New_Tactic-${tactic.path}/$fileName",
             commitMessage = "New Tactic: $fileName",
-            prTitle = "New Tactic: ${tactic.tacticName}}",
+            prTitle = "New Tactic: ${tactic.tacticName}",
         ) || prCreationFailure()
     else call.respond(HttpStatusCode.InternalServerError, "Failed to create the tactic file.")
     call.respond(HttpStatusCode.Created)

@@ -68,5 +68,5 @@ private fun List<BulletPoint>.bulletPointsMarkdown() = map {
 
 private fun List<Source>.sourcesMarkdown() = mapIndexed { index, source ->
     if (source.link == null) "${index}) ${source.title}"
-    else "${index + 1}) [${source.title}](${source.link})\n"
-}.joinToString("")
+    else "${index + 1}) [${source.title}](${source.link})"
+}.insertBetween("\n").joinToString("")

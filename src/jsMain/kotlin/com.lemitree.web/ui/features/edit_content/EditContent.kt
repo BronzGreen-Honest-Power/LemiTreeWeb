@@ -6,12 +6,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import com.lemitree.common.data.Tactic
-import com.lemitree.web.ElementType
 import com.lemitree.web.ui.components.Switch
 import com.lemitree.web.ui.components.SwitchButton
 import org.jetbrains.compose.web.css.paddingBottom
 import org.jetbrains.compose.web.css.paddingTop
 import org.jetbrains.compose.web.css.px
+
+enum class ElementType { TACTIC, CATEGORY }
 
 @Composable
 fun EditContent(
