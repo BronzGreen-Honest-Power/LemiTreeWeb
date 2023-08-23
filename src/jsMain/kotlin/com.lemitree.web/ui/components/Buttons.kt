@@ -1,27 +1,59 @@
 package com.lemitree.web.ui.components
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import org.jetbrains.compose.web.css.Color
-import org.jetbrains.compose.web.css.StyleScope
-import org.jetbrains.compose.web.css.backgroundColor
-import org.jetbrains.compose.web.dom.Button
-import org.jetbrains.compose.web.dom.Text
+import androidx.compose.foundation.layout.Row
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.Text
+import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 
 @Composable
 fun LemiButton(
+    modifier: Modifier = Modifier,
     text: String,
-    contentStyle: StyleScope.() -> Unit = {},
     onClicked: () -> Unit,
 ) {
-    Button({
-        onClick { onClicked() }
-        style { contentStyle() }
-    }) {
+    Button(
+        onClick =  { onClicked() },
+        modifier = modifier,
+    ) {
         Text(text)
+    }
+}
+
+@Composable
+fun <T> LemiSwitch(
+    options: Pair<SwitchButton<T>, SwitchButton<T>>,
+    initial: T,
+    onSwitchClicked: (T) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    var selected by remember { mutableStateOf(initial) }
+    val (firstBtnBg, secondBtnBg) = when (selected) {
+        options.first.value -> Color.LightGray to Color.Gray
+        options.second.value -> Color.Gray to Color.LightGray //todo change light gray to alice blue
+        else -> Color.Gray to Color.Gray
+    }
+    Row {
+        Button(
+            onClick = {
+                selected = options.first.value
+                onSwitchClicked(options.first.value)
+            },
+            colors = ButtonDefaults.buttonColors(backgroundColor = firstBtnBg)
+        ) {
+            Text(options.first.text)
+        }
+        Button(
+            onClick = {
+                selected = options.second.value
+                onSwitchClicked(options.second.value)
+            },
+            colors = ButtonDefaults.buttonColors(backgroundColor = secondBtnBg)
+        ) {
+            Text(options.second.text)
+        }
     }
 }
 
@@ -29,45 +61,3 @@ data class SwitchButton<T>(
     val value: T,
     val text: String,
 )
-
-@Composable
-fun <T> Switch(
-    options: Pair<SwitchButton<T>, SwitchButton<T>>,
-    initial: T,
-    onSwitchClicked: (T) -> Unit,
-    contentStyle: StyleScope.() -> Unit,
-) {
-    Row(
-        rowStyle = {
-            contentStyle()
-        }
-    ) {
-        var selected by remember { mutableStateOf(initial) }
-        val (firstBtnBg, secondBtnBg) = when (selected) {
-            options.first.value -> Color.aliceblue to Color.gray
-            options.second.value -> Color.gray to Color.aliceblue
-            else -> Color.gray to Color.gray
-        }
-
-        LemiButton(
-            text = options.first.text,
-            onClicked = {
-                selected = options.first.value
-                onSwitchClicked(options.first.value)
-            },
-            contentStyle = {
-                backgroundColor(firstBtnBg)
-            }
-        )
-        LemiButton(
-            text = options.second.text,
-            onClicked = {
-                selected = options.second.value
-                onSwitchClicked(options.second.value)
-            },
-            contentStyle = {
-                backgroundColor(secondBtnBg)
-            }
-        )
-    }
-}

@@ -1,21 +1,18 @@
 package com.lemitree.web.ui.features.tree_view
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.material.Text
+import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.PointerIcon
+import androidx.compose.ui.input.pointer.pointerHoverIcon
+import androidx.compose.ui.unit.dp
 import com.lemitree.common.data.TreeItem
-import com.lemitree.web.ui.components.ContainerInSection
-import com.lemitree.web.ui.components.MainContentLayout
-import org.jetbrains.compose.web.css.Color
-import org.jetbrains.compose.web.css.color
-import org.jetbrains.compose.web.css.cursor
-import org.jetbrains.compose.web.css.marginLeft
-import org.jetbrains.compose.web.css.px
-import org.jetbrains.compose.web.dom.Div
-import org.jetbrains.compose.web.dom.Span
-import org.jetbrains.compose.web.dom.Text
 
 @Composable
 fun TacticTree(
@@ -23,7 +20,12 @@ fun TacticTree(
     selectedPath: String?,
     onClickItem: (String) -> Unit,
 ) {
-    MainContentLayout {
+    Column(
+        modifier = Modifier
+            .fillMaxHeight()
+            .width(300.dp)
+            .padding(10.dp)
+    ) {
         items.forEach {
             TreeItem(
                 item = it,
@@ -40,34 +42,25 @@ private fun TreeItem(
     selectedPath: String?,
     onClickItem: (String) -> Unit,
 ) {
-    val textColor = if (selectedPath == item.path) Color.blue else Color.black
+    val textColor = if (selectedPath == item.path) Color.Blue else Color.Black
     var showChildren by remember { mutableStateOf(false) }
-    ContainerInSection {
-        Span({
-            style { cursor("pointer") }
-            onClick {
-                showChildren = !showChildren
-                onClickItem(item.path)
-            }
-        }) {
-            Div({
-                style { color(textColor) }
-            }) {
-                Text(item.displayName)
-            }
-        }
-        if (showChildren) {
-            Div({
-                style {
-                    marginLeft(16.px)
+    Column {
+        Text(
+            text = item.displayName,
+            color = textColor,
+            modifier = Modifier
+                .clickable {
+                    showChildren = !showChildren
+                    onClickItem(item.path)
                 }
-            }) {
-                TacticTree(
-                    items = item.children,
-                    selectedPath = selectedPath,
-                    onClickItem = onClickItem,
-                )
-            }
+                .pointerHoverIcon(PointerIcon.Hand)
+        )
+        if (showChildren) {
+            TacticTree(
+                items = item.children,
+                selectedPath = selectedPath,
+                onClickItem = onClickItem,
+            )
         }
     }
 }

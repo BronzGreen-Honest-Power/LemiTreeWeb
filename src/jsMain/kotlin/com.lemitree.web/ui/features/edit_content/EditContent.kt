@@ -1,16 +1,10 @@
 package com.lemitree.web.ui.features.edit_content
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
 import com.lemitree.common.data.Tactic
-import com.lemitree.web.ui.components.Switch
+import com.lemitree.web.ui.components.LemiSwitch
 import com.lemitree.web.ui.components.SwitchButton
-import org.jetbrains.compose.web.css.paddingBottom
-import org.jetbrains.compose.web.css.paddingTop
-import org.jetbrains.compose.web.css.px
 
 enum class ElementType { TACTIC, CATEGORY }
 
@@ -21,14 +15,11 @@ fun EditContent(
     onClickCreateCategory: (String) -> Unit,
 ) {
     var selected by remember { mutableStateOf(ElementType.TACTIC) }
-    Switch(
+    LemiSwitch(
         options = SwitchButton(ElementType.TACTIC, "New tactic") to
                 SwitchButton(ElementType.CATEGORY, "New category"),
         initial = selected,
-        contentStyle = {
-            paddingTop(10.px)
-            paddingBottom(10.px)
-        },
+        modifier = Modifier, //todo
         onSwitchClicked = { selected = it },
     )
     when (selected) {

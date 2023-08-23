@@ -1,10 +1,15 @@
 package com.lemitree.web.ui.features.edit_content
 
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.Checkbox
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.lemitree.common.data.Energy
 import com.lemitree.common.data.EnergyCost
 import com.lemitree.common.data.Expenses
@@ -12,15 +17,8 @@ import com.lemitree.common.data.Frequency
 import com.lemitree.common.data.FrequencyType
 import com.lemitree.common.data.TacticMetadata
 import com.lemitree.common.data.TimeDuration
-import com.lemitree.web.ui.components.Column
-import com.lemitree.web.ui.components.DropdownMenu
-import com.lemitree.web.ui.components.LemiNumberTextField
-import com.lemitree.web.ui.components.Row
-import org.jetbrains.compose.web.css.padding
-import org.jetbrains.compose.web.css.px
-import org.jetbrains.compose.web.css.width
-import org.jetbrains.compose.web.dom.CheckboxInput
-import org.jetbrains.compose.web.dom.Text
+import com.lemitree.web.ui.components.NumberOutlinedTextField
+import com.lemitree.web.ui.components.SimpleDropdownMenu
 
 @Composable
 fun MetadataFields(
@@ -80,17 +78,17 @@ private fun FrequencyFields(
     }
     Text("Frequency:")
     Row {
-        DropdownMenu(
+        SimpleDropdownMenu(
             items = FrequencyType.displayNames(),
             selected = frequencyType?.name,
             onItemSelected = { frequencyType = FrequencyType.fromString(it) },
-            contentStyle = { width(fieldWidth.px) }
+            modifier = Modifier.defaultMinSize(minWidth = fieldWidth.dp)
         )
-        LemiNumberTextField(
+        NumberOutlinedTextField(
+            value = frequencyInterval?.toString() ?: "",
+            onValueChange = { frequencyInterval = it },
             hint = "Interval",
-            text = frequencyInterval.toString(),
-            onValueChanged = { frequencyInterval = it?.toInt() },
-            contentStyle = { width(fieldWidth.px) }
+            modifier = Modifier.width(fieldWidth.dp),
         )
     }
 }
@@ -112,22 +110,17 @@ private fun TimeDurationFields(
     }
     Text("Time duration:")
     Row {
-        LemiNumberTextField(
+        NumberOutlinedTextField(
+            value = durationHours?.toString() ?: "",
+            onValueChange = { durationHours = it },
             hint = "Hours",
-            text = durationHours?.toString() ?: "",
-            onValueChanged = { durationHours = it?.toInt() },
-            contentStyle = { width(fieldWidth.px) }
+            modifier = Modifier.width(fieldWidth.dp),
         )
-        LemiNumberTextField(
+        NumberOutlinedTextField(
+            value = durationMinutes?.toString() ?: "",
+            onValueChange = { durationMinutes = if (it > 59) 59 else it },
             hint = "Minutes",
-            text = durationMinutes?.toString() ?: "",
-            onValueChanged = {
-                durationMinutes = it?.let {
-                    val value = it.toInt()
-                    if (value > 59) 59 else value
-                }
-            },
-            contentStyle = { width(fieldWidth.px) }
+            modifier = Modifier.width(fieldWidth.dp),
         )
     }
 }
@@ -157,34 +150,34 @@ private fun ExpensesFields(
     Text("Expenses:")
     Column {
         Row {
-            LemiNumberTextField(
+            NumberOutlinedTextField(
+                value = expensesAmount?.toString() ?: "",
+                onValueChange = { expensesAmount = it },
                 hint = "Cost in $ (round to whole number)",
-                text = expensesAmount?.toString() ?: "",
-                onValueChanged = { expensesAmount = it?.toInt() },
-                contentStyle = { width(fieldWidth.px) }
+                modifier = Modifier.width(fieldWidth.dp),
             )
         }
         Row {
             Text("Recurring expense?")
-            CheckboxInput {
-                style { padding(25.px) }
-                checked(expensesRepeating)
-                onInput { expensesRepeating = it.value }
-            }
+            Checkbox(
+                checked = expensesRepeating,
+                onCheckedChange = { expensesRepeating = it },
+                modifier = Modifier.padding(4.dp),
+            )
         }
         if (expensesRepeating) {
             Row {
-                DropdownMenu(
+                SimpleDropdownMenu(
                     items = FrequencyType.displayNames(),
                     selected = expensesFrequencyType?.name,
                     onItemSelected = { expensesFrequencyType = FrequencyType.fromString(it) },
-                    contentStyle = { width(fieldWidth.px) }
+                    modifier = Modifier.defaultMinSize(minWidth = fieldWidth.dp)
                 )
-                LemiNumberTextField(
+                NumberOutlinedTextField(
+                    value = expensesFrequencyInterval.toString(),
+                    onValueChange = { expensesFrequencyInterval = it },
                     hint = "Interval",
-                    text = expensesFrequencyInterval.toString(),
-                    onValueChanged = { expensesFrequencyInterval = it?.toInt() },
-                    contentStyle = { width(fieldWidth.px) }
+                    modifier = Modifier.width(fieldWidth.dp),
                 )
             }
         }
@@ -210,20 +203,20 @@ private fun EnergyFields(
     Row {
         Column {
             Text("Physical:")
-            DropdownMenu(
+            SimpleDropdownMenu(
                 items = EnergyCost.displayNames(),
                 selected = energy?.physicalCost?.name,
                 onItemSelected = { physicalEnergy = EnergyCost.fromString(it) },
-                contentStyle = { width(fieldWidth.px) }
+                modifier = Modifier.defaultMinSize(minWidth = fieldWidth.dp),
             )
         }
         Column {
             Text("Mental:")
-            DropdownMenu(
+            SimpleDropdownMenu(
                 items = EnergyCost.displayNames(),
                 selected = energy?.mentalCost?.name,
                 onItemSelected = { mentalEnergy = EnergyCost.fromString(it) },
-                contentStyle = { width(fieldWidth.px) }
+                modifier = Modifier.defaultMinSize(minWidth = fieldWidth.dp),
             )
         }
     }

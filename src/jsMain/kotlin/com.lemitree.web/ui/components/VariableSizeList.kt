@@ -1,19 +1,17 @@
 package com.lemitree.web.ui.components
 
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import org.jetbrains.compose.web.css.AlignItems
-import org.jetbrains.compose.web.css.alignItems
-import org.jetbrains.compose.web.css.height
-import org.jetbrains.compose.web.css.marginLeft
-import org.jetbrains.compose.web.css.px
-import org.jetbrains.compose.web.css.width
-import org.jetbrains.compose.web.dom.Text
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 
 @Composable
 fun <T> VariableSizeList(
     title: String? = null,
     fields: List<T?>,
-    onValueChanged: (List<T?>) -> Unit,
+    onValueChange: (List<T?>) -> Unit,
     fieldContent: @Composable (item: T?, onFieldValueChanged: (T?) -> Unit) -> Unit,
 ) {
     title?.let {
@@ -21,29 +19,23 @@ fun <T> VariableSizeList(
     }
     LemiButton(
         text = "+",
-        contentStyle = { width(40.px) }
-    ) {
-        onValueChanged(fields.plus(null))
-    }
+        modifier = Modifier.width(40.dp),
+        onClicked = { onValueChange(fields.plus(null)) },
+    )
     fields.forEachIndexed { index, item ->
         Row(
-            rowStyle = {
-                alignItems(AlignItems.Center)
-            }
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             val btnSize = 20
             LemiButton(
                 text = "-",
-                contentStyle = {
-                    width(btnSize.px)
-                    height(btnSize.px)
-                    marginLeft(4.px)
-                },
-            ) {
-                onValueChanged(fields.minus(fields[index]))
-            }
+                modifier = Modifier.size(btnSize.dp)
+                    .padding(start = 4.dp),
+                onClicked =  { onValueChange(fields.minus(fields[index])) },
+            )
             fieldContent(item) {
-                onValueChanged(fields.toMutableList().apply { set(index, it) })
+                onValueChange(fields.toMutableList().apply { set(index, it) })
             }
         }
     }

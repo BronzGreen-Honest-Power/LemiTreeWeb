@@ -1,19 +1,14 @@
 package com.lemitree.web.ui.features.edit_content
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import com.lemitree.web.ui.components.Column
-import com.lemitree.web.ui.components.LemiButton
-import com.lemitree.web.ui.components.LemiTextField
-import org.jetbrains.compose.web.css.cursor
-import org.jetbrains.compose.web.css.marginBottom
-import org.jetbrains.compose.web.css.marginTop
-import org.jetbrains.compose.web.css.px
-import org.jetbrains.compose.web.css.width
-import org.jetbrains.compose.web.dom.Text
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Button
+import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Text
+import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 
 @Composable
 fun EditCategoryForm(
@@ -24,32 +19,23 @@ fun EditCategoryForm(
     val newPath = "${selectedPath}/${categoryName}"
     Column {
         Text("Path:")
-        LemiTextField(
-            text = newPath,
-            readonly = true,
-        ) {
-            textFieldStyle()
-            cursor("pointer")
-        }
+        OutlinedTextField(
+            value = newPath,
+            onValueChange = { },
+            readOnly = true,
+        )
 
         Text("Category name:")
-        LemiTextField(
-            text = categoryName,
-            onValueChanged = { categoryName = it }
-        ) {
-            textFieldStyle()
-            cursor("pointer")
-        }
+        OutlinedTextField(
+            value = categoryName,
+            onValueChange = { categoryName = it }
+        )
 
-        LemiButton(
-            text = "Create category",
-            contentStyle = {
-                width(columnWidth.px)
-                marginTop(10.px)
-                marginBottom(10.px)
-            }
+        Button(
+            onClick = { onClickSubmit(newPath) },
+            modifier = Modifier.fillMaxWidth().padding(vertical = 10.dp),
         ) { //todo invalid required fields to throw error
-            onClickSubmit(newPath)
+            Text("Create category")
         }
     }
 }

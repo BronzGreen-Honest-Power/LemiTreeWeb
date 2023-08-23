@@ -1,28 +1,24 @@
 package com.lemitree.web.ui.features.edit_content
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Button
+import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.lemitree.common.data.Tactic
-import com.lemitree.web.ui.components.Column
-import com.lemitree.web.ui.components.LemiButton
-import com.lemitree.web.ui.components.LemiTextField
-import org.jetbrains.compose.web.css.StyleScope
-import org.jetbrains.compose.web.css.cursor
-import org.jetbrains.compose.web.css.marginBottom
-import org.jetbrains.compose.web.css.marginTop
-import org.jetbrains.compose.web.css.px
-import org.jetbrains.compose.web.css.width
-import org.jetbrains.compose.web.dom.Text
 
 const val columnWidth = 800
-val textFieldStyle: StyleScope.() -> Unit = {
-    marginTop(10.px)
-    marginBottom(10.px)
-    width(columnWidth.px)
-}
+val textFieldModifier = Modifier
+    .fillMaxWidth()
+    .padding(10.dp)
 
 @Composable
 fun EditTacticForm(
@@ -42,20 +38,18 @@ fun EditTacticForm(
     }
     Column {
         Text("Path:")
-        LemiTextField(
-            text = "$selectedPath/${newTactic.fileName}",
-            readonly = true,
-        ) {
-            textFieldStyle()
-            cursor("pointer")
-        }
+        OutlinedTextField(
+            value = "$selectedPath/${newTactic.fileName}",
+            onValueChange = {},
+            readOnly = true,
+            modifier = textFieldModifier,
+        )
         Text("Title:")
-        LemiTextField(
-            text = content.title,
-            onValueChanged = { content = content.copy(title = it) },
-        ) {
-            textFieldStyle()
-        }
+        OutlinedTextField(
+            value = content.title,
+            onValueChange = { content = content.copy(title = it) },
+            modifier = textFieldModifier,
+        )
         MetadataFields(
             fieldWidth = columnWidth / 2,
             data = metadata,
@@ -66,15 +60,11 @@ fun EditTacticForm(
             content = content,
             onTacticContentChanged = { content = it }
         )
-        LemiButton(
-            text = "Create tactic",
-            contentStyle = {
-                width(columnWidth.px)
-                marginTop(10.px)
-                marginBottom(10.px)
-            }
+        Button(
+            onClick = { onClickSubmit(newTactic) },
+            modifier = textFieldModifier,
         ) { //todo invalid required fields to throw error
-            onClickSubmit(newTactic)
+            Text("Create tactic")
         }
     }
 }
