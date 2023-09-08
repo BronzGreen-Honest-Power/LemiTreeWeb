@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
-import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -14,6 +13,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.lemitree.common.data.Tactic
+import com.lemitree.web.ui.components.LemiTextField
 
 const val columnWidth = 800
 val textFieldModifier = Modifier
@@ -38,14 +38,14 @@ fun EditTacticForm(
     }
     Column {
         Text("Path:")
-        OutlinedTextField(
+        LemiTextField(
             value = "$selectedPath/${newTactic.fileName}",
             onValueChange = {},
             readOnly = true,
             modifier = textFieldModifier,
         )
         Text("Title:")
-        OutlinedTextField(
+        LemiTextField(
             value = content.title,
             onValueChange = { content = content.copy(title = it) },
             modifier = textFieldModifier,

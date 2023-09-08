@@ -6,9 +6,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.lemitree.common.data.*
-import com.lemitree.web.ui.components.LemiMultilineTextField
 import com.lemitree.web.ui.components.LemiTextField
 import com.lemitree.web.ui.components.VariableSizeList
 
@@ -18,7 +18,7 @@ fun TacticContentFields(
     content: TacticContent,
     onTacticContentChanged: (TacticContent) -> Unit,
 ) {
-    var intro by remember { mutableStateOf("") }
+    var intro by remember { mutableStateOf(listOf(TextFieldValue())) }
     var why by remember { mutableStateOf("") }
     var how by remember { mutableStateOf("") }
     ExternalResourcesFields(
@@ -28,16 +28,18 @@ fun TacticContentFields(
         onAudioChanged = { onTacticContentChanged(content.copy(audioLink = it)) },
     )
     Text("Introduction:")
-    LemiMultilineTextField(
-        value = intro,
+    LemiTextField(
+        values = intro,
+        minLines = 2,
         onValueChange = {
             intro = it
-            onTacticContentChanged(content.copy(intro = intro))
+            onTacticContentChanged(content.copy(intro = intro.last().text))
         },
     )
     Text("Why:")
-    LemiMultilineTextField(
+    LemiTextField(
         value = why,
+        minLines = 2,
         onValueChange = {
             why = it
             onTacticContentChanged(content.copy(why = why))
@@ -48,8 +50,9 @@ fun TacticContentFields(
         onValueChange = { onTacticContentChanged(content.copy(benefits = it)) }
     )
     Text("How:")
-    LemiMultilineTextField(
+    LemiTextField(
         value = how,
+        minLines = 2,
         onValueChange = {
             how = it
             onTacticContentChanged(content.copy(how = how))
@@ -79,8 +82,9 @@ private fun BenefitsFields(
         fields = fields,
         onValueChange = { fields = it },
         fieldContent = { benefit, onFieldValueChanged ->
-            LemiMultilineTextField(
+            LemiTextField(
                 value = benefit,
+                minLines = 2,
                 onValueChange = { onFieldValueChanged(it) },
                 modifier = Modifier.width(fieldWidth.dp)
             )
@@ -107,14 +111,16 @@ private fun InstructionsFields(
         fieldContent = { instruction, onFieldValueChanged ->
             val newInstruction = instruction ?: Instruction.EMPTY
             Column {
-                LemiMultilineTextField(
+                LemiTextField(
                     value = instruction?.title,
+                    minLines = 2,
                     hint = "Title",
                     onValueChange = { onFieldValueChanged(newInstruction.copy(title = it)) },
                     modifier = Modifier.width(fieldWidth.dp),
                 )
-                LemiMultilineTextField(
+                LemiTextField(
                     value = instruction?.text,
+                    minLines = 2,
                     hint = "Description",
                     onValueChange = { onFieldValueChanged(newInstruction.copy(text = it)) },
                     modifier = Modifier.width(fieldWidth.dp),
@@ -131,8 +137,9 @@ private fun InstructionsFields(
                     fields = bulletPoints,
                     onValueChange = { bulletPoints = it },
                     fieldContent = { bulletPoint, onBPFieldValueChanged ->
-                        LemiMultilineTextField(
+                        LemiTextField(
                             value = bulletPoint,
+                            minLines = 2,
                             onValueChange = { onBPFieldValueChanged(it) },
                             modifier = Modifier.width(fieldWidth.dp),
                         )

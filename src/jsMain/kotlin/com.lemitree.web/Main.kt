@@ -22,11 +22,13 @@ import org.koin.dsl.module
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
 import org.jetbrains.compose.web.renderComposable
+import org.jetbrains.skiko.ClipboardManager
 
 val uiModule = module {
     single<CoroutineContext> { EmptyCoroutineContext }
     single { CoroutineScope(get()) }
     single { ViewModel(get()) }
+    single { ClipboardManager() }
 }
 
 fun main() {
@@ -35,7 +37,7 @@ fun main() {
     }
     onWasmReady {
         @OptIn(ExperimentalComposeUiApi::class)
-        CanvasBasedWindow("LemiTree") {
+        CanvasBasedWindow(title = "LemiTree") {
             val viewModel: ViewModel = getKoinInstance()
             val mdText by viewModel.mdText.collectAsState()
             val tree by viewModel.tree.collectAsState()
