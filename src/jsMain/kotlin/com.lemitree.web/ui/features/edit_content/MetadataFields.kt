@@ -118,7 +118,7 @@ private fun TimeDurationFields(
         )
         NumberOutlinedTextField(
             value = durationMinutes?.toString() ?: "",
-            onValueChange = { durationMinutes = if (it > 59) 59 else it },
+            onValueChange = { durationMinutes = if (it != null && it > 59) 59 else it },
             hint = "Minutes",
             modifier = Modifier.width(fieldWidth.dp),
         )

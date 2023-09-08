@@ -43,13 +43,18 @@ fun Placeholder(
 @Composable
 fun NumberOutlinedTextField(
     value: String,
-    onValueChange: (Int) -> Unit,
+    onValueChange: (Int?) -> Unit,
     hint: String,
     modifier: Modifier = Modifier,
 ) {
     OutlinedTextField(
         value = value,
-        onValueChange = { onValueChange(it.toInt()) },
+        onValueChange = { text ->
+            if (text.isEmpty()) onValueChange(null)
+            text.toIntOrNull()?.let {
+                onValueChange(it)
+            }
+        },
         keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
         modifier = modifier,
         placeholder = {
