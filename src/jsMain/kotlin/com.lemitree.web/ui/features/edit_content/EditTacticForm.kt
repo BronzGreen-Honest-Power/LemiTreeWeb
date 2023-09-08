@@ -15,11 +15,13 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.lemitree.common.data.Tactic
 import com.lemitree.web.ui.components.LemiTextField
+import com.lemitree.web.ui.components.asTextFieldState
 
 const val columnWidth = 800
 val textFieldModifier = Modifier
     .fillMaxWidth()
     .padding(10.dp)
+
 
 @Composable
 fun EditTacticForm(
@@ -30,7 +32,7 @@ fun EditTacticForm(
     var newTactic by remember { mutableStateOf(tactic) }
     var metadata by remember { mutableStateOf(tactic.metadata) }
     var content by remember { mutableStateOf(tactic.content) }
-    var contentText by remember { mutableStateOf(TextFieldValue(content.title)) }
+    var contentText by content.title.asTextFieldState()
     remember(metadata, content) {
         newTactic = tactic.copy(
             path = selectedPath,

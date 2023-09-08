@@ -19,6 +19,7 @@ import com.lemitree.common.data.Source
 import com.lemitree.common.data.TacticContent
 import com.lemitree.web.ui.components.LemiTextField
 import com.lemitree.web.ui.components.VariableSizeList
+import com.lemitree.web.ui.components.asTextFieldState
 
 @Composable
 fun TacticContentFields(
@@ -26,9 +27,9 @@ fun TacticContentFields(
     content: TacticContent,
     onTacticContentChanged: (TacticContent) -> Unit,
 ) {
-    var intro by remember { mutableStateOf(TextFieldValue(content.intro)) }
-    var why by remember { mutableStateOf(TextFieldValue(content.why)) }
-    var how by remember { mutableStateOf(TextFieldValue(content.how)) }
+    var intro by content.intro.asTextFieldState()
+    var why by content.why.asTextFieldState()
+    var how by content.how.asTextFieldState()
     ExternalResourcesFields(
         content = content,
         onInfographicChanged = { onTacticContentChanged(content.copy(infographicLink = it)) },
@@ -90,7 +91,7 @@ private fun BenefitsFields(
         fields = fields,
         onValueChange = { fields = it },
         fieldContent = { benefit, onFieldValueChanged ->
-            var benefitText by remember { mutableStateOf(TextFieldValue(benefit ?: "")) }
+            var benefitText by benefit.asTextFieldState()
             LemiTextField(
                 value = benefitText,
                 minLines = 2,
@@ -123,8 +124,8 @@ private fun InstructionsFields(
         fieldContent = { instruction, onFieldValueChanged ->
             val newInstruction = instruction ?: Instruction.EMPTY
             Column {
-                var instructionTitle by remember { mutableStateOf(TextFieldValue(instruction?.title ?: "")) }
-                var instructionText by remember { mutableStateOf(TextFieldValue(instruction?.text ?: "")) }
+                var instructionTitle by instruction?.title.asTextFieldState()
+                var instructionText by instruction?.text.asTextFieldState()
                 LemiTextField(
                     value = instructionTitle,
                     minLines = 2,
@@ -193,8 +194,8 @@ private fun SourcesFields(
         fieldContent = { source, onFieldValueChanged ->
             val newSource = source ?: Source.EMPTY
             Row {
-                var sourceTitle by remember { mutableStateOf(TextFieldValue(source?.title ?: "")) }
-                var sourceLink by remember { mutableStateOf(TextFieldValue(source?.link ?: "")) }
+                var sourceTitle by source?.title.asTextFieldState()
+                var sourceLink by source?.link.asTextFieldState()
                 LemiTextField(
                     value = sourceTitle,
                     hint = "Title",
@@ -225,9 +226,9 @@ private fun ExternalResourcesFields(
     onVideoChanged: (String) -> Unit,
     onAudioChanged: (String) -> Unit,
 ) {
-    var infographicLink by remember { mutableStateOf(TextFieldValue(content.infographicLink ?: "")) }
-    var videoLink by remember { mutableStateOf(TextFieldValue(content.videoLink ?: "")) }
-    var audioLink by remember { mutableStateOf(TextFieldValue(content.audioLink ?: "")) }
+    var infographicLink by content.infographicLink.asTextFieldState()
+    var videoLink by content.videoLink.asTextFieldState()
+    var audioLink by content.audioLink.asTextFieldState()
     Text("Infographic:")
     LemiTextField(
         value = infographicLink,

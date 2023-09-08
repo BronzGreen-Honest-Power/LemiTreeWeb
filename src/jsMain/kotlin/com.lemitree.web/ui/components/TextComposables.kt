@@ -26,10 +26,8 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.substring
-import com.lemitree.common.helpers.getKoinInstance
 import kotlinx.browser.window
 import kotlinx.coroutines.await
-import org.jetbrains.skiko.ClipboardManager
 
 @Composable
 fun Placeholder(
@@ -151,3 +149,6 @@ private fun TextFieldValue.replaceSelectedText(replacement: String) =
 
 private fun TextFieldValue.replaceSelected(replacement: String) =
     copy(text = text.replaceRange(selection.min, selection.max, replacement), TextRange(0, 0))
+
+@Composable
+fun String?.asTextFieldState() = remember { mutableStateOf(TextFieldValue(this ?: "")) }
