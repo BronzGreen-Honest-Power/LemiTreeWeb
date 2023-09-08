@@ -4,11 +4,19 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import com.lemitree.common.data.*
+import com.lemitree.common.data.Benefit
+import com.lemitree.common.data.BulletPoint
+import com.lemitree.common.data.Instruction
+import com.lemitree.common.data.Source
+import com.lemitree.common.data.TacticContent
 import com.lemitree.web.ui.components.LemiTextField
 import com.lemitree.web.ui.components.VariableSizeList
 
@@ -18,9 +26,9 @@ fun TacticContentFields(
     content: TacticContent,
     onTacticContentChanged: (TacticContent) -> Unit,
 ) {
-    var intro by remember { mutableStateOf(listOf(TextFieldValue())) }
-    var why by remember { mutableStateOf("") }
-    var how by remember { mutableStateOf("") }
+    var intro by remember { mutableStateOf(TextFieldValue(content.intro)) }
+    var why by remember { mutableStateOf(TextFieldValue(content.why)) }
+    var how by remember { mutableStateOf(TextFieldValue(content.how)) }
     ExternalResourcesFields(
         content = content,
         onInfographicChanged = { onTacticContentChanged(content.copy(infographicLink = it)) },
@@ -29,11 +37,11 @@ fun TacticContentFields(
     )
     Text("Introduction:")
     LemiTextField(
-        values = intro,
+        value = intro,
         minLines = 2,
         onValueChange = {
             intro = it
-            onTacticContentChanged(content.copy(intro = intro.last().text))
+            onTacticContentChanged(content.copy(intro = intro.text))
         },
     )
     Text("Why:")
@@ -42,7 +50,7 @@ fun TacticContentFields(
         minLines = 2,
         onValueChange = {
             why = it
-            onTacticContentChanged(content.copy(why = why))
+            onTacticContentChanged(content.copy(why = why.text))
         },
     )
     BenefitsFields(
@@ -55,7 +63,7 @@ fun TacticContentFields(
         minLines = 2,
         onValueChange = {
             how = it
-            onTacticContentChanged(content.copy(how = how))
+            onTacticContentChanged(content.copy(how = how.text))
         },
     )
     InstructionsFields(
@@ -82,10 +90,14 @@ private fun BenefitsFields(
         fields = fields,
         onValueChange = { fields = it },
         fieldContent = { benefit, onFieldValueChanged ->
+            var benefitText by remember { mutableStateOf(TextFieldValue(benefit ?: "")) }
             LemiTextField(
-                value = benefit,
+                value = benefitText,
                 minLines = 2,
-                onValueChange = { onFieldValueChanged(it) },
+                onValueChange = {
+                    benefitText = it
+                    onFieldValueChanged(it.text)
+                },
                 modifier = Modifier.width(fieldWidth.dp)
             )
         }
@@ -111,18 +123,26 @@ private fun InstructionsFields(
         fieldContent = { instruction, onFieldValueChanged ->
             val newInstruction = instruction ?: Instruction.EMPTY
             Column {
+                var instructionTitle by remember { mutableStateOf(TextFieldValue(instruction?.title ?: "")) }
+                var instructionText by remember { mutableStateOf(TextFieldValue(instruction?.text ?: "")) }
                 LemiTextField(
-                    value = instruction?.title,
+                    value = instructionTitle,
                     minLines = 2,
                     hint = "Title",
-                    onValueChange = { onFieldValueChanged(newInstruction.copy(title = it)) },
+                    onValueChange = {
+                        instructionTitle = it
+                        onFieldValueChanged(newInstruction.copy(title = it.text))
+                    },
                     modifier = Modifier.width(fieldWidth.dp),
                 )
                 LemiTextField(
-                    value = instruction?.text,
+                    value = instructionText,
                     minLines = 2,
                     hint = "Description",
-                    onValueChange = { onFieldValueChanged(newInstruction.copy(text = it)) },
+                    onValueChange = {
+                        instructionText = it
+                        onFieldValueChanged(newInstruction.copy(text = it.text))
+                    },
                     modifier = Modifier.width(fieldWidth.dp),
                 )
                 var bulletPoints by remember { mutableStateOf<List<BulletPoint?>>(emptyList()) }
@@ -136,11 +156,15 @@ private fun InstructionsFields(
                     title = "Bullet points:",
                     fields = bulletPoints,
                     onValueChange = { bulletPoints = it },
-                    fieldContent = { bulletPoint, onBPFieldValueChanged ->
+                    fieldContent = { bulletPoint, onFieldValueChanged ->
+                        var bulletPointText by remember { mutableStateOf(TextFieldValue(bulletPoint ?: "")) }
                         LemiTextField(
-                            value = bulletPoint,
+                            value = bulletPointText,
                             minLines = 2,
-                            onValueChange = { onBPFieldValueChanged(it) },
+                            onValueChange = {
+                                bulletPointText = it
+                                onFieldValueChanged(it.text)
+                            },
                             modifier = Modifier.width(fieldWidth.dp),
                         )
                     }
@@ -169,16 +193,24 @@ private fun SourcesFields(
         fieldContent = { source, onFieldValueChanged ->
             val newSource = source ?: Source.EMPTY
             Row {
+                var sourceTitle by remember { mutableStateOf(TextFieldValue(source?.title ?: "")) }
+                var sourceLink by remember { mutableStateOf(TextFieldValue(source?.link ?: "")) }
                 LemiTextField(
-                    value = source?.title,
+                    value = sourceTitle,
                     hint = "Title",
-                    onValueChange = { onFieldValueChanged(newSource.copy(title = it)) },
+                    onValueChange = {
+                        sourceTitle = it
+                        onFieldValueChanged(newSource.copy(title = it.text))
+                    },
                     modifier = Modifier.width(fieldWidth.dp)
                 )
                 LemiTextField(
-                    value = source?.link,
+                    value = sourceLink,
                     hint = "Link",
-                    onValueChange = { onFieldValueChanged(newSource.copy(link = it)) },
+                    onValueChange = {
+                        sourceLink = it
+                        onFieldValueChanged(newSource.copy(link = it.text))
+                    },
                     modifier = Modifier.width(fieldWidth.dp)
                 )
             }
@@ -193,15 +225,15 @@ private fun ExternalResourcesFields(
     onVideoChanged: (String) -> Unit,
     onAudioChanged: (String) -> Unit,
 ) {
-    var infographicLink by remember { mutableStateOf(content.infographicLink) }
-    var videoLink by remember { mutableStateOf(content.videoLink) }
-    var audioLink by remember { mutableStateOf(content.audioLink) }
+    var infographicLink by remember { mutableStateOf(TextFieldValue(content.infographicLink ?: "")) }
+    var videoLink by remember { mutableStateOf(TextFieldValue(content.videoLink ?: "")) }
+    var audioLink by remember { mutableStateOf(TextFieldValue(content.audioLink ?: "")) }
     Text("Infographic:")
     LemiTextField(
         value = infographicLink,
         onValueChange = {
             infographicLink = it
-            onInfographicChanged(it)
+            onInfographicChanged(it.text)
         }
     )
     Text("Video:")
@@ -209,7 +241,7 @@ private fun ExternalResourcesFields(
         value = videoLink,
         onValueChange = {
             videoLink = it
-            onVideoChanged(it)
+            onVideoChanged(it.text)
         },
     )
     Text("Audio:")
@@ -217,7 +249,7 @@ private fun ExternalResourcesFields(
         value = audioLink,
         onValueChange = {
             audioLink = it
-            onAudioChanged(it)
+            onAudioChanged(it.text)
         },
     )
 }

@@ -63,49 +63,6 @@ fun NumberOutlinedTextField(
 @Composable
 fun LemiTextField(
     modifier: Modifier = Modifier,
-    value: String?,
-    hint: String = "",
-    readOnly: Boolean = false,
-    minLines: Int = 1,
-    onValueChange: (String) -> Unit,
-) {
-    var textValue by remember { mutableStateOf(TextFieldValue(text = value ?: "")) }
-    var pasteText by remember { mutableStateOf(false) }
-    LaunchedEffect(pasteText) {
-        if (pasteText) {
-            val clipboardText = window.navigator.clipboard.readText().await()
-            val finalString = textValue.replaceSelectedText(clipboardText)
-            onValueChange(finalString)
-            pasteText = false
-        }
-    }
-    OutlinedTextField(
-        value = textValue,
-        placeholder = { Placeholder(hint) },
-        onValueChange = { textValue = it },
-        readOnly = readOnly,
-        minLines = minLines,
-        modifier = modifier
-            .pointerHoverIcon(PointerIcon.Text)
-            .onPreviewKeyEvent {
-                when {
-                    it.isCtrlPressed && it.key == Key.C -> { //todo copying overwrites text with "c"
-                        window.navigator.clipboard.writeText(textValue.selectedText)
-                        true
-                    }
-                    it.isCtrlPressed && it.key == Key.V -> {
-                        pasteText = true
-                        false
-                    }
-                    else -> false
-                }
-            }
-    )
-}//todo remove
-
-@Composable
-fun LemiTextField(
-    modifier: Modifier = Modifier,
     value: TextFieldValue,
     hint: String = "",
     readOnly: Boolean = false,

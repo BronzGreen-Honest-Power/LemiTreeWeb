@@ -73,7 +73,7 @@ fun main() {
         val viewModel: ViewModel = getKoinInstance()
         val mdText by viewModel.mdText.collectAsState()
         val selectedPath by viewModel.selectedPath.collectAsState()
-        selectedPath?.let { path ->
+        selectedPath?.let { _ ->
             if (mdText != null) {
                 TacticView(mdText!!)
             }

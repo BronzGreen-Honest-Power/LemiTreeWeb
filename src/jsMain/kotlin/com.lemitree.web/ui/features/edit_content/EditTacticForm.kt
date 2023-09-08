@@ -11,6 +11,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.lemitree.common.data.Tactic
 import com.lemitree.web.ui.components.LemiTextField
@@ -29,6 +30,7 @@ fun EditTacticForm(
     var newTactic by remember { mutableStateOf(tactic) }
     var metadata by remember { mutableStateOf(tactic.metadata) }
     var content by remember { mutableStateOf(tactic.content) }
+    var contentText by remember { mutableStateOf(TextFieldValue(content.title)) }
     remember(metadata, content) {
         newTactic = tactic.copy(
             path = selectedPath,
@@ -39,15 +41,18 @@ fun EditTacticForm(
     Column {
         Text("Path:")
         LemiTextField(
-            value = "$selectedPath/${newTactic.fileName}",
+            value = TextFieldValue("$selectedPath/${newTactic.fileName}"),
             onValueChange = {},
             readOnly = true,
             modifier = textFieldModifier,
         )
         Text("Title:")
         LemiTextField(
-            value = content.title,
-            onValueChange = { content = content.copy(title = it) },
+            value = contentText,
+            onValueChange = {
+                contentText = it
+                content = content.copy(title = it.text)
+            },
             modifier = textFieldModifier,
         )
         MetadataFields(
