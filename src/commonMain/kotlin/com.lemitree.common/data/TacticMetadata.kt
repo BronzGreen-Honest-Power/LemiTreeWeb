@@ -77,10 +77,10 @@ enum class FrequencyType(val code: String) : DropdownItem {
     YEARS("Y");
 
     companion object {
-        fun fromString(s: String): FrequencyType = values().first { it.name.uppercase() == s.uppercase() }
-        fun fromCode(code: String) = values().first { it.code == code }
-        fun displayNames() = values().map { it.displayText }
-        fun names() = values().map { it.name }
+        fun fromString(s: String): FrequencyType? = entries.find { it.name.uppercase() == s.uppercase() }
+        fun fromCode(code: String) = entries.first { it.code == code }
+        fun displayNames() = entries.map { it.displayText }
+        fun names() = entries.map { it.name }
     }
 
     override val displayText: String
@@ -164,11 +164,11 @@ enum class EnergyCost(val code: String) : DropdownItem {
     HIGH("H");
 
     companion object {
-        fun fromString(s: String): EnergyCost = values().first { it.name.uppercase() == s.uppercase() }
-        fun displayNames() = values().map { it.displayText }
-        fun names() = values().map { it.name }
+        fun fromString(s: String): EnergyCost? = entries.find { it.name.uppercase() == s.uppercase() }
+        fun displayNames() = entries.map { it.displayText }
+        fun names() = entries.map { it.name }
         fun fromCode(tag: String?): EnergyCost? = tag?.let { code ->
-            values().firstOrNull { code.first().toString() == it.code }
+            entries.firstOrNull { code.first().toString() == it.code }
         }
     }
 

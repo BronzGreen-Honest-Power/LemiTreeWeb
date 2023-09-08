@@ -1,13 +1,18 @@
 package com.lemitree.web.ui.features.edit_content
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.material.Checkbox
+import androidx.compose.material.CheckboxColors
+import androidx.compose.material.CheckboxDefaults
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.lemitree.common.data.Energy
@@ -149,20 +154,22 @@ private fun ExpensesFields(
     }
     Text("Expenses:")
     Column {
-        Row {
+        Row(verticalAlignment = Alignment.CenterVertically) {
             NumberOutlinedTextField(
                 value = expensesAmount?.toString() ?: "",
                 onValueChange = { expensesAmount = it },
                 hint = "Cost in $ (round to whole number)",
                 modifier = Modifier.width(fieldWidth.dp),
             )
-        }
-        Row {
-            Text("Recurring expense?")
+            Text(
+                text = "Recurring expense?",
+                modifier = Modifier.padding(4.dp),
+            )
             Checkbox(
                 checked = expensesRepeating,
                 onCheckedChange = { expensesRepeating = it },
                 modifier = Modifier.padding(4.dp),
+                colors = CheckboxDefaults.colors(checkedColor = MaterialTheme.colors.primary)
             )
         }
         if (expensesRepeating) {
@@ -174,7 +181,7 @@ private fun ExpensesFields(
                     modifier = Modifier.defaultMinSize(minWidth = fieldWidth.dp)
                 )
                 NumberOutlinedTextField(
-                    value = expensesFrequencyInterval.toString(),
+                    value = expensesFrequencyInterval?.toString() ?: "",
                     onValueChange = { expensesFrequencyInterval = it },
                     hint = "Interval",
                     modifier = Modifier.width(fieldWidth.dp),

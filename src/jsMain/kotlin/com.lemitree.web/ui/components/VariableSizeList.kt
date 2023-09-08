@@ -1,7 +1,12 @@
 package com.lemitree.web.ui.components
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,15 +30,26 @@ fun <T> VariableSizeList(
     fields.forEachIndexed { index, item ->
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
+            horizontalArrangement = Arrangement.Start,
+            modifier = Modifier.fillMaxWidth(),
         ) {
-            val btnSize = 20
-            LemiButton(
-                text = "-",
-                modifier = Modifier.size(btnSize.dp)
-                    .padding(start = 4.dp),
-                onClicked =  { onValueChange(fields.minus(fields[index])) },
-            )
+            val btnSize = 40
+//            LemiButton(
+//                text = "-",
+//                modifier = Modifier.size(btnSize.dp)
+//                    .padding(horizontal = 4.dp),
+//                onClicked =  { onValueChange(fields.minus(fields[index])) },
+//            )
+            IconButton(
+                onClick = { onValueChange(fields.minus(fields[index])) },
+                modifier = Modifier.padding(horizontal = 4.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = "Delete benefit",
+                    tint = MaterialTheme.colors.primary,
+                )
+            }
             fieldContent(item) {
                 onValueChange(fields.toMutableList().apply { set(index, it) })
             }
