@@ -8,15 +8,17 @@ import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import com.lemitree.web.ui.components.LemiTextField
 
 @Composable
 fun EditCategoryForm(
     selectedPath: String,
     onClickSubmit: (String) -> Unit,
 ) {
-    var categoryName by remember { mutableStateOf("") }
-    val newPath = "${selectedPath}/${categoryName}"
+    var categoryName by remember { mutableStateOf(TextFieldValue("")) }
+    val newPath = "${selectedPath}/${categoryName.text}"
     Column {
         Text("Path:")
         OutlinedTextField(
@@ -26,7 +28,7 @@ fun EditCategoryForm(
         )
 
         Text("Category name:")
-        OutlinedTextField(
+        LemiTextField(
             value = categoryName,
             onValueChange = { categoryName = it }
         )
