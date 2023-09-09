@@ -15,14 +15,14 @@ import com.lemitree.common.helpers.getKoinInstance
 import com.lemitree.web.ui.features.edit_content.EditContent
 import com.lemitree.web.ui.features.tree_view.TacticTree
 import com.lemitree.web.ui.features.view_tactic.TacticView
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.EmptyCoroutineContext
 import kotlinx.coroutines.CoroutineScope
+import org.jetbrains.compose.web.renderComposable
+import org.jetbrains.skiko.ClipboardManager
 import org.jetbrains.skiko.wasm.onWasmReady
 import org.koin.core.context.GlobalContext.startKoin
 import org.koin.dsl.module
-import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.EmptyCoroutineContext
-import org.jetbrains.compose.web.renderComposable
-import org.jetbrains.skiko.ClipboardManager
 
 val uiModule = module {
     single<CoroutineContext> { EmptyCoroutineContext }
@@ -45,16 +45,16 @@ fun main() {
             val contentScrollState = rememberScrollState(0)
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(contentScrollState)
             ) {
                 TacticTree(
                     items = tree,
                     selectedPath = selectedPath,
                     onClickItem = { viewModel.updatePath(it) },
                 )
-                Column(
-                    modifier = Modifier.verticalScroll(contentScrollState)
-                ) {
+                Column {
                     selectedPath?.let { path ->
                         if (mdText == null) {
                             EditContent(
