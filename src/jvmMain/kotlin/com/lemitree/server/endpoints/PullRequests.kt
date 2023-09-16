@@ -17,10 +17,10 @@ fun createPullRequest(
 ) = File(baseDir).runCommand(
     // todo: this command is a bit long, consider extracting it to a proper script
     "git checkout master && " +
-    "git checkout -b $branchName && " +
+    "git checkout -b \"$branchName\" && " +
     "git add -A && " +
     "git commit -m \"$commitMessage\" && " +
-    "git push --set-upstream origin $branchName && " +
+    "git push --set-upstream origin \"$branchName\" && " +
     "gh api --method POST " + // todo: this method will return 0 even if unsuccessful, validate response
     "-H \"Accept: application/vnd.github+json\" " +
     "-H \"X-GitHub-Api-Version: 2022-11-28\" " +
