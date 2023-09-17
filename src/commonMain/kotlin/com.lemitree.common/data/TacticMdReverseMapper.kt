@@ -30,7 +30,8 @@ private fun String.extractSources() = extractTagContent("sources")
     .lines()
     .map { sourceString ->
         sourceString
-            .dropSpacedPrefix() // "n) "
+            .dropSpacedPrefix() // "- "
+            .dropSpacedPrefix() // "(n) "
             .let {
                 if ("[" in it) {
                     Source(
@@ -45,12 +46,14 @@ private fun String.extractSources() = extractTagContent("sources")
             }
     }
 
-private fun String.extractSection(tag: String) = extractTagContent(tag)
-    .split("###")
-    .first()
-    .lines()
-    .trimBlankLines()
-    .joinToString("\n")
+private fun String.extractSection(tag: String) =
+    if ("###" !in this) extractTagContent(tag)
+    else extractTagContent(tag)
+        .split("###")
+        .first()
+        .lines()
+        .trimBlankLines()
+        .joinToString("\n")
 
 private fun String.extractSubsections(tag: String) = extractTagContent(tag)
     .lines()
@@ -76,12 +79,12 @@ private fun String.extractInstructions() = run {
     val titles = extractSubsectionTitles("how")
     val subsections = extractSubsections("how")
     val descriptions = subsections.map {  subsection ->
-        val line = subsection.lines().find { !it.startsWith("*") }
+        val line = subsection.lines().find { !it.startsWith("-") }
         line?.ifBlank { "" } ?: ""
     }
     val bulletPoints = subsections.map { subsection ->
         subsection.lines()
-            .filter { it.startsWith("*") }
+            .filter { it.startsWith("-") }//todo potential bug if multiline instruction
             .map { it.dropSpacedPrefix() }
     }
     titles.mapIndexed { index, title ->
@@ -95,7 +98,7 @@ private fun String.extractInstructions() = run {
 
 
 private fun String.extractLink(tag: String) = extractTagContent(tag)
-    .dropSpacedPrefix() // "* "
+    .dropSpacedPrefix() // "- "
 
 private fun String.extractTagContent(tag: String) = lines()
     .run {

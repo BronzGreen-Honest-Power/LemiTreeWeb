@@ -72,17 +72,17 @@ private val exampleTacticMd = """
 
 ## **Infographic**
 [//]: <> (BO-infographic)
-* Link to image or formatted image.
+- Link to image or formatted image.
 
 [//]: <> (EO-infographic)
 ## **Video**
 [//]: <> (BO-video)
-* Link to video.
+- Link to video.
 
 [//]: <> (EO-video)
 ## **Audio**
 [//]: <> (BO-audio)
-* Link to audio.
+- Link to audio.
 
 [//]: <> (EO-audio)
 ## **Intro**
@@ -113,21 +113,22 @@ Description of how in bullet points for 1 or more descriptions. Maximum 7 steps/
 ### *Instruction 1*
 Instruction 1 description.
 
-* Step 1
-* Step 2
-* ...
+- Step 1
+- Step 2
+- ...
 
 ### *Instruction 2*
 
-* Step 1
-* Step 2
-* ...
+- Step 1
+- Step 2
+- ...
 
 [//]: <> (EO-how)
 ## **Sources**
 [//]: <> (BO-sources)
-1) Test test
-2) [Testttt](https://lol.co.uk)
+- (1) Test test
+- (2) [Testttt](https://lol.co.uk)
+
 [//]: <> (EO-sources)
 """.trimIndent()
 
