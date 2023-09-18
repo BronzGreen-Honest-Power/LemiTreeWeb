@@ -18,7 +18,7 @@ fun EditCategoryForm(
     onClickSubmit: (String) -> Unit,
 ) {
     var categoryName by remember { mutableStateOf(TextFieldValue("")) }
-    val newPath = "${selectedPath}/${categoryName.text}"
+    val newPath = "${selectedPath}/${categoryName.text.replace(' ', '_')}"
     Column {
         Text("Path:")
         OutlinedTextField(
