@@ -33,13 +33,6 @@ fun <T> VariableSizeList(
             horizontalArrangement = Arrangement.Start,
             modifier = Modifier.fillMaxWidth(),
         ) {
-            val btnSize = 40
-//            LemiButton(
-//                text = "-",
-//                modifier = Modifier.size(btnSize.dp)
-//                    .padding(horizontal = 4.dp),
-//                onClicked =  { onValueChange(fields.minus(fields[index])) },
-//            )
             IconButton(
                 onClick = { onValueChange(fields.minus(fields[index])) },
                 modifier = Modifier.padding(horizontal = 4.dp)

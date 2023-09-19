@@ -9,9 +9,10 @@ import com.lemitree.web.ui.components.SwitchButton
 enum class ElementType { TACTIC, CATEGORY }
 
 @Composable
-fun EditContent(
+fun AddContent(
     path: String,
-    onClickEditTactic: (Tactic) -> Unit,
+    tactic: Tactic = Tactic.EMPTY,
+    onClickCreateTactic: (Tactic) -> Unit,
     onClickCreateCategory: (String) -> Unit,
 ) {
     var selected by remember { mutableStateOf(ElementType.TACTIC) }
@@ -25,8 +26,9 @@ fun EditContent(
     when (selected) {
         ElementType.TACTIC -> {
             EditTacticForm(
+                tactic = tactic,
                 selectedPath = path,
-                onClickSubmit = onClickEditTactic,
+                onClickSubmit = onClickCreateTactic,
             )
         }
         ElementType.CATEGORY -> {

@@ -12,7 +12,10 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.CanvasBasedWindow
 import com.lemitree.common.helpers.getKoinInstance
-import com.lemitree.web.ui.features.edit_content.EditContent
+import com.lemitree.web.ui.components.LemiSwitch
+import com.lemitree.web.ui.components.SwitchButton
+import com.lemitree.web.ui.features.edit_content.AddContent
+import com.lemitree.web.ui.features.edit_content.EditTacticForm
 import com.lemitree.web.ui.features.tree_view.TacticTree
 import com.lemitree.web.ui.features.view_tactic.TacticView
 import kotlin.coroutines.CoroutineContext
@@ -35,13 +38,15 @@ fun main() {
     startKoin {
         modules(uiModule)
     }
+    val viewModel: ViewModel = getKoinInstance()
     onWasmReady {
         @OptIn(ExperimentalComposeUiApi::class)
         CanvasBasedWindow(title = "LemiTree") {
-            val viewModel: ViewModel = getKoinInstance()
             val mdText by viewModel.mdText.collectAsState()
             val tree by viewModel.tree.collectAsState()
-            val selectedPath by viewModel.selectedPath.collectAsState()
+            val selectedDirectory by viewModel.selectedDirectory.collectAsState()
+            val tactic by viewModel.tactic.collectAsState()
+            val isEditing by viewModel.isEditingTactic.collectAsState()
             val contentScrollState = rememberScrollState(0)
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -51,15 +56,31 @@ fun main() {
             ) {
                 TacticTree(
                     items = tree,
-                    selectedPath = selectedPath,
+                    selectedPath = selectedDirectory,
                     onClickItem = { viewModel.updatePath(it) },
                 )
                 Column {
-                    selectedPath?.let { path ->
+                    selectedDirectory?.let { path ->
+                        if (mdText != null) {
+                            LemiSwitch(
+                                options = SwitchButton(false, "View") to
+                                        SwitchButton(true, "Edit"),
+                                initial = isEditing,
+                                onSwitchClicked = { viewModel.updateIsEditing(it) },
+                            )
+                            if (isEditing) {
+                                EditTacticForm(
+                                    tactic = tactic,
+                                    selectedPath = path,
+                                    onClickSubmit = { tactic -> viewModel.editTactic(tactic) },
+                                )
+                            }
+                        }
                         if (mdText == null) {
-                            EditContent(
+                            AddContent(
                                 path = path,
-                                onClickEditTactic = { newTactic -> viewModel.editTactic(newTactic) },
+                                tactic = tactic,
+                                onClickCreateTactic = { newTactic -> viewModel.createTactic(newTactic) },
                                 onClickCreateCategory = { newPath -> viewModel.createCategory(newPath) },
                             )
                         }
@@ -70,11 +91,11 @@ fun main() {
     }
     // Utilising Compose HTML to use a simple markdown rendering tool.
     renderComposable(rootElementId = "root") {
-        val viewModel: ViewModel = getKoinInstance()
         val mdText by viewModel.mdText.collectAsState()
-        val selectedPath by viewModel.selectedPath.collectAsState()
-        selectedPath?.let { _ ->
-            if (mdText != null) {
+        val selectedDirectory by viewModel.selectedDirectory.collectAsState()
+        val isEditing by viewModel.isEditingTactic.collectAsState()
+        selectedDirectory?.let { _ ->
+            if (mdText != null && !isEditing) {
                 TacticView(mdText!!)
             }
         }

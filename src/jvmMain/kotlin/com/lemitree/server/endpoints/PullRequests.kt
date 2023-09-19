@@ -8,13 +8,19 @@ import io.ktor.server.response.respond
 import io.ktor.util.pipeline.PipelineContext
 import java.io.File
 
-// todo: test process against potential concurrency issues
-fun createPullRequest(
+/**
+ * Create & checkout branch
+ * Commit changes
+ * Push branch with commit
+ * Create a PR
+ * Checkout master again
+ * */
+fun createPullRequest(// todo: test process against potential concurrency issues
     baseDir: String,
     branchName: String,
     commitMessage: String,
     prTitle: String,
-) = File(baseDir).runCommand(
+) = File(baseDir).runCommand<Boolean>(
     // todo: this command is a bit long, consider extracting it to a proper script
     "git checkout master && " +
     "git checkout -b \"$branchName\" && " +
@@ -38,3 +44,13 @@ suspend fun PipelineContext<Unit, ApplicationCall>.prCreationFailure(): Boolean 
     call.respond(HttpStatusCode.InternalServerError, "Failed to push file to Github.")
     return false
 }
+
+//gh api \
+//  --method POST \
+//  -H "Accept: application/vnd.github+json" \
+//  -H "X-GitHub-Api-Version: 2022-11-28" \
+//  /repos/BronzGreen-Honest-Power/LemiTree/pulls \
+//  -f title='Test PR from server' \
+// -f body='Please pull these awesome changes in!' \
+// -f head='test-branch' \
+// -f base='master'

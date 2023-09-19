@@ -55,6 +55,7 @@ fun TacticContentFields(
         },
     )
     BenefitsFields(
+        value = content.benefits,
         fieldWidth = fieldWidth,
         onValueChange = { onTacticContentChanged(content.copy(benefits = it)) }
     )
@@ -68,10 +69,12 @@ fun TacticContentFields(
         },
     )
     InstructionsFields(
+        value = content.instructions,
         fieldWidth = fieldWidth,
         onValueChange = { onTacticContentChanged(content.copy(instructions = it)) }
     )
     SourcesFields(
+        value = content.sources,
         fieldWidth = fieldWidth,
         onValueChange = { onTacticContentChanged(content.copy(sources = it)) }
     )
@@ -79,10 +82,11 @@ fun TacticContentFields(
 
 @Composable
 private fun BenefitsFields(
+    value: List<Benefit>,
     fieldWidth: Int,
     onValueChange: (List<Benefit>) -> Unit,
 ) {
-    var fields by remember { mutableStateOf<List<Benefit?>>(emptyList()) }
+    var fields by remember { mutableStateOf<List<Benefit?>>(value) }
     remember(fields) {
         onValueChange(fields.filterNotNull())
     }
@@ -107,14 +111,15 @@ private fun BenefitsFields(
 
 @Composable
 private fun InstructionsFields(
+    value: List<Instruction>,
     fieldWidth: Int,
     onValueChange: (List<Instruction>) -> Unit,
 ) {
-    var fields by remember { mutableStateOf<List<Instruction?>>(emptyList()) }
+    var fields by remember { mutableStateOf<List<Instruction?>>(value) }
     remember(fields) {
         val filteredSources = fields
             .filterNotNull()
-            .filter { it.title.isNotEmpty() && it.text.isNotEmpty() }
+            .filter { it.title.isNotEmpty() }
         onValueChange(filteredSources)
     }
     VariableSizeList(
@@ -124,8 +129,8 @@ private fun InstructionsFields(
         fieldContent = { instruction, onFieldValueChanged ->
             val newInstruction = instruction ?: Instruction.EMPTY
             Column {
-                var instructionTitle by instruction?.title.asTextFieldState()
-                var instructionText by instruction?.text.asTextFieldState()
+                var instructionTitle by newInstruction.title.asTextFieldState()
+                var instructionText by newInstruction.text.asTextFieldState()
                 LemiTextField(
                     value = instructionTitle,
                     minLines = 2,
@@ -146,7 +151,9 @@ private fun InstructionsFields(
                     },
                     modifier = Modifier.width(fieldWidth.dp),
                 )
-                var bulletPoints by remember { mutableStateOf<List<BulletPoint?>>(emptyList()) }
+                var bulletPoints by remember {
+                    mutableStateOf<List<BulletPoint?>>(newInstruction.bulletPoints)
+                }
                 remember(bulletPoints) {
                     val filteredBulledPoints = bulletPoints
                         .filterNotNull()
@@ -177,10 +184,11 @@ private fun InstructionsFields(
 
 @Composable
 private fun SourcesFields(
+    value: List<Source>,
     fieldWidth: Int,
     onValueChange: (List<Source>) -> Unit,
 ) {
-    var fields by remember { mutableStateOf<List<Source?>>(emptyList()) }
+    var fields by remember { mutableStateOf<List<Source?>>(value) }
     remember(fields) {
         val filteredSources = fields
             .filterNotNull()

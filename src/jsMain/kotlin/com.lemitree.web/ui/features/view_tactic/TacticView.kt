@@ -11,6 +11,7 @@ import org.jetbrains.compose.web.css.display
 import org.jetbrains.compose.web.css.fontFamily
 import org.jetbrains.compose.web.css.height
 import org.jetbrains.compose.web.css.marginLeft
+import org.jetbrains.compose.web.css.marginTop
 import org.jetbrains.compose.web.css.overflow
 import org.jetbrains.compose.web.css.padding
 import org.jetbrains.compose.web.css.position
@@ -31,6 +32,7 @@ fun TacticView(
                 height(800.px)
                 backgroundColor(Color.aliceblue)
                 position(Position.Absolute)
+                marginTop(50.px)
                 marginLeft(400.px)
                 overflow("scroll")
             }

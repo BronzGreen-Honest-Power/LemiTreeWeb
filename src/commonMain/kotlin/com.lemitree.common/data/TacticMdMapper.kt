@@ -45,6 +45,7 @@ ${content.instructions.instructionsMarkdown()}
 ## **Sources**
 [//]: <> (BO-sources)
 ${content.sources.sourcesMarkdown()}
+
 [//]: <> (EO-sources)
 """.trimIndent()
 
@@ -53,11 +54,12 @@ private fun List<Benefit>.benefitMarkdown() = mapIndexed { index, benefit ->
 ### *Benefit ${index + 1}*
 $benefit
 """.trimIndent()
-}.insertBetween("\n").joinToString("")
+}.insertBetween("\n\n").joinToString("")
 
 private fun List<Instruction>.instructionsMarkdown() = map {
 """
 ### *${it.title}*
+${it.text}
 ${it.bulletPoints.bulletPointsMarkdown()}
 """.trimIndent()
 }.insertBetween("\n").joinToString("")

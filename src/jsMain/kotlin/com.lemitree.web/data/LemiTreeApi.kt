@@ -1,5 +1,6 @@
 package com.lemitree.web.data
 
+import com.lemitree.common.data.ContentAction
 import com.lemitree.common.data.Tactic
 import com.lemitree.common.data.TreeItem
 import io.ktor.client.HttpClient
@@ -31,10 +32,10 @@ suspend fun getContent(path: String): String =
 suspend fun getTree(): List<TreeItem> =
     jsonClient.get("$baseUrl/tree").body()
 
-suspend fun modifyTactic(newTactic: Tactic) =
-    jsonClient.post("$baseUrl/tactic") {
+suspend fun modifyTactic(tactic: Tactic, action: ContentAction) =
+    jsonClient.post("$baseUrl/tactic/${action.key}") {
         contentType(ContentType.Application.Json)
-        setBody(newTactic)
+        setBody(tactic)
     }
 
 suspend fun modifyCategory(newCategoryPath: String) =

@@ -71,7 +71,7 @@ fun EditTacticForm(
             onClick = { onClickSubmit(newTactic) },
             modifier = textFieldModifier,
         ) { //todo invalid required fields to throw error
-            Text("Create tactic")
+            Text("Submit")
         }
     }
 }

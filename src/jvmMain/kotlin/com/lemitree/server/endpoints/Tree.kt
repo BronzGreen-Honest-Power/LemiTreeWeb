@@ -5,6 +5,7 @@ import com.lemitree.common.helpers.getKoinInstance
 import com.lemitree.server.BASE_DIR
 import com.lemitree.server.helpers.ioLaunch
 import com.lemitree.server.helpers.runListCommand
+import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.ApplicationCall
 import io.ktor.server.application.call
 import io.ktor.server.response.respond
@@ -23,7 +24,7 @@ suspend fun PipelineContext<Unit, ApplicationCall>.processTree(
         println("Tree: $tree")
         val mappedTree = tree
             .mapToTreeItems()
-        println("Tree: $mappedTree")
-        call.respond(mappedTree)
+        println("Tree items: $mappedTree")
+        call.respond(HttpStatusCode.OK, mappedTree)
     }
 }

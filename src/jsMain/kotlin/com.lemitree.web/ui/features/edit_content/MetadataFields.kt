@@ -1,9 +1,11 @@
 package com.lemitree.web.ui.features.edit_content
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.selection.LocalTextSelectionColors
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.Checkbox
-import androidx.compose.material.CheckboxColors
 import androidx.compose.material.CheckboxDefaults
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -146,10 +148,9 @@ private fun ExpensesFields(
         else null
     }
     remember(expensesAmount, expensesRepeating, expensesFrequency) {
-        val newExpenses =
-            if (expensesAmount != null && expensesFrequency != null)
-                Expenses(cost = expensesAmount!!, frequency = expensesFrequency)
-            else null
+        val newExpenses = expensesAmount?.let {
+            Expenses(cost = it, frequency = expensesFrequency)
+        }
         onValueChanged(newExpenses)
     }
     Text("Expenses:")

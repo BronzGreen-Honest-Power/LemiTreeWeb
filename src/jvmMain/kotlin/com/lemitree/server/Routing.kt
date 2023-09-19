@@ -1,7 +1,7 @@
 package com.lemitree.server
 
+import com.lemitree.server.endpoints.processModifyTactic
 import com.lemitree.server.endpoints.processNewCategory
-import com.lemitree.server.endpoints.processNewTactic
 import com.lemitree.server.endpoints.processTactics
 import com.lemitree.server.endpoints.processTree
 import io.ktor.http.HttpStatusCode
@@ -23,11 +23,13 @@ fun Application.routingSetup() {
         get("/tactics/{path...}") {
             processTactics()
         }
-        post("/tactic") {
-            processNewTactic() //todo allow editing existing
+        post("/tactic/{action}") {
+            processModifyTactic()
         }
         post("/category") {
             processNewCategory() //todo allow editing existing
         }
+        //todo error reporting
+        //todo analytics
     }
 }

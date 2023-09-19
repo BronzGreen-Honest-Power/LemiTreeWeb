@@ -146,12 +146,6 @@ private fun KeyEvent.toShortcutEvent() = when {
     else -> null
 }
 
-val TextFieldValue.selectedText
-    get() = text.substring(selection)
-
-private fun TextFieldValue.replaceSelectedText(replacement: String) =
-    text.replaceRange(selection.start, selection.end, replacement)
-
 private fun TextFieldValue.replaceSelected(replacement: String) =
     copy(text = text.replaceRange(selection.min, selection.max, replacement), TextRange(0, 0))
 

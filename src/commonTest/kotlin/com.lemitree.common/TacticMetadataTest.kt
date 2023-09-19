@@ -133,6 +133,14 @@ internal class TacticMetadataTest {
             ),
         )
         assertEquals(expenses2, Expenses.decode(tag2))
+
+        // X0
+        val tag3 = "0"
+        val expenses3 = Expenses(
+            cost = 0,
+            frequency = null,
+        )
+        assertEquals(expenses3, Expenses.decode(tag3))
     }
 
     @Test

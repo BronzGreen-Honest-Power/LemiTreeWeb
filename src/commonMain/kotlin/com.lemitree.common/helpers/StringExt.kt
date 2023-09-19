@@ -18,3 +18,5 @@ fun String.dropSpacedPrefix() = dropToInclusive(' ')
 
 fun List<String>.trimBlankLines() = dropWhile { it.isBlank() }
     .dropLastWhile { it.isBlank() }
+
+fun String.dropLastPathSegment() = split("/").dropLast(1).joinToString("/")
