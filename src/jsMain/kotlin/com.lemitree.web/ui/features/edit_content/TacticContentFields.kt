@@ -195,7 +195,7 @@ private fun SourcesFields(
             .filter { it.title.isNotEmpty() }
         onValueChange(filteredSources)
     }
-    VariableSizeList( //todo
+    VariableSizeList(
         title = "Sources:",
         fields = fields,
         onValueChange = { fields = it },

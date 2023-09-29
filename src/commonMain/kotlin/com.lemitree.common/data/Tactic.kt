@@ -1,6 +1,7 @@
 package com.lemitree.common.data
 
 import com.lemitree.common.helpers.ifNotEmpty
+import com.lemitree.common.helpers.replaceSpaces
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -16,7 +17,7 @@ data class Tactic(
             metadata = TacticMetadata.EMPTY,
         )
     }
-    val tacticName get() = content.title.replace(' ', '_')
+    val tacticName get() = content.title.replaceSpaces()
     val fileName get() = tacticName.ifNotEmpty { "$it.md" }
 }
 

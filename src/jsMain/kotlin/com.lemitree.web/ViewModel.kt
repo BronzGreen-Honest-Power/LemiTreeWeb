@@ -8,6 +8,7 @@ import com.lemitree.common.data.decodeMetadata
 import com.lemitree.common.data.extractMetadata
 import com.lemitree.common.data.toTacticContent
 import com.lemitree.common.helpers.dropLastPathSegment
+import com.lemitree.common.helpers.isMdFile
 import com.lemitree.common.helpers.subscribed
 import com.lemitree.web.data.getContent
 import com.lemitree.web.data.getTree
@@ -29,8 +30,8 @@ class ViewModel(
     private val selectedPath = MutableStateFlow<String?>(null)
     val selectedDirectory: StateFlow<String?> = selectedPath
         .map {
-            if (it?.endsWith(".md") == true)
-                it.dropLastPathSegment()
+            if (it.isMdFile())
+                it?.dropLastPathSegment()
             else it
         }
         .subscribed(scope, null)
@@ -59,7 +60,7 @@ class ViewModel(
     private suspend fun watchPath() {
         selectedPath.collect {
             it ?: return@collect
-            if (it.endsWith(".md")) fetchContent(it)
+            if (it.isMdFile()) fetchContent(it)
             else _mdText.update { null }
         }
     }

@@ -20,3 +20,9 @@ fun List<String>.trimBlankLines() = dropWhile { it.isBlank() }
     .dropLastWhile { it.isBlank() }
 
 fun String.dropLastPathSegment() = split("/").dropLast(1).joinToString("/")
+
+fun String.replaceSpaces() = replace(' ', '_')
+
+fun String.replaceUnderscores() = replace('_', ' ')
+
+fun String?.isMdFile() = this?.endsWith(".md") ?: false

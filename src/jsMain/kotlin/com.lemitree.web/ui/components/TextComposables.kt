@@ -25,7 +25,6 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.text.substring
 import kotlinx.browser.window
 import kotlinx.coroutines.await
 

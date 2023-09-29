@@ -1,5 +1,6 @@
 package com.lemitree.common.data
 
+import com.lemitree.common.helpers.replaceUnderscores
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -8,7 +9,7 @@ data class TreeItem(
     val children: List<TreeItem> = emptyList(),
 ) {
     val lastSegment get() = path.split("/").last()
-    val displayName get() = lastSegment.replace('_', ' ')
+    val displayName get() = lastSegment.replaceUnderscores()
     fun hasChildren() = children.isNotEmpty()
 }
 

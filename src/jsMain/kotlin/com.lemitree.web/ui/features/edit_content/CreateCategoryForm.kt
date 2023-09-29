@@ -10,6 +10,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import com.lemitree.common.helpers.replaceSpaces
 import com.lemitree.web.ui.components.LemiTextField
 
 @Composable
@@ -18,7 +19,7 @@ fun EditCategoryForm(
     onClickSubmit: (String) -> Unit,
 ) {
     var categoryName by remember { mutableStateOf(TextFieldValue("")) }
-    val newPath = "${selectedPath}/${categoryName.text.replace(' ', '_')}"
+    val newPath = "${selectedPath}/${categoryName.text.replaceSpaces()}"
     Column {
         Text("Path:")
         OutlinedTextField(
