@@ -8,7 +8,6 @@ pluginManagement {
 
     plugins {
         val kotlinVersion = extra["kotlin.version"] as String
-        val agpVersion = extra["agp.version"] as String
         val composeVersion = extra["compose.version"] as String
 
         kotlin("jvm").version(kotlinVersion)
