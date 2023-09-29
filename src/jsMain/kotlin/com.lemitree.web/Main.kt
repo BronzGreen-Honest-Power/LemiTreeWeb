@@ -18,21 +18,9 @@ import com.lemitree.web.ui.features.edit_content.AddContent
 import com.lemitree.web.ui.features.edit_content.EditTacticForm
 import com.lemitree.web.ui.features.tree_view.TacticTree
 import com.lemitree.web.ui.features.view_tactic.TacticView
-import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.EmptyCoroutineContext
-import kotlinx.coroutines.CoroutineScope
 import org.jetbrains.compose.web.renderComposable
-import org.jetbrains.skiko.ClipboardManager
 import org.jetbrains.skiko.wasm.onWasmReady
 import org.koin.core.context.GlobalContext.startKoin
-import org.koin.dsl.module
-
-val uiModule = module {
-    single<CoroutineContext> { EmptyCoroutineContext }
-    single { CoroutineScope(get()) }
-    single { ViewModel(get()) }
-    single { ClipboardManager() }
-}
 
 fun main() {
     startKoin {

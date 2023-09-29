@@ -14,7 +14,6 @@ import com.lemitree.web.data.getTree
 import com.lemitree.web.data.modifyCategory
 import com.lemitree.web.data.modifyTactic
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -52,7 +51,6 @@ class ViewModel(
 
     init {
         scope.launch {
-            delay(500) // so that getBaseUrl is defined
             fetchTree()
             watchPath()
         }

@@ -3,6 +3,8 @@ package com.lemitree.web.data
 import com.lemitree.common.data.ContentAction
 import com.lemitree.common.data.Tactic
 import com.lemitree.common.data.TreeItem
+import com.lemitree.common.helpers.getKoinInstance
+import com.lemitree.web.FrontendConfig
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -14,8 +16,7 @@ import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
-external fun getBaseUrl(): String
-val baseUrl = getBaseUrl()
+val baseUrl = getKoinInstance<FrontendConfig>().baseUrl
 
 val jsonClient = HttpClient {
     install(ContentNegotiation) {
