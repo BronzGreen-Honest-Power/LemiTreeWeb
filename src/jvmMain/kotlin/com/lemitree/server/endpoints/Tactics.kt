@@ -3,11 +3,11 @@ package com.lemitree.server.endpoints
 import com.lemitree.common.helpers.getKoinInstance
 import com.lemitree.server.BASE_DIR
 import com.lemitree.server.helpers.ioLaunch
+import com.lemitree.server.helpers.readFile
 import io.ktor.server.application.ApplicationCall
 import io.ktor.server.application.call
 import io.ktor.server.response.respond
 import io.ktor.util.pipeline.PipelineContext
-import java.io.File
 
 suspend fun PipelineContext<Unit, ApplicationCall>.processTactics(
     baseDir: String = getKoinInstance(BASE_DIR),
@@ -17,12 +17,7 @@ suspend fun PipelineContext<Unit, ApplicationCall>.processTactics(
     println("path: $path")
     // todo: secure against tracing path to other files outside the repo
     ioLaunch {
-        val file = File("$baseDir/$path")
-        val response = when {
-            !file.exists() -> "Error: File not found"
-            file.isDirectory -> "Error: This is a directory"
-            else -> file.bufferedReader().readText()
-        }
+        val response = readFile("$baseDir/$path")
         call.respond(response)
     }
 }

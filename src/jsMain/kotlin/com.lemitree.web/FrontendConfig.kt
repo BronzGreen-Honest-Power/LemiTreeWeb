@@ -3,9 +3,9 @@ package com.lemitree.web
 import kotlinx.serialization.Serializable
 
 /**
- * This config comes from your local config.js.
+ * This config comes from your local resources/frontend_config.json.
  * If you need to modify the config values, do so in there.
- * Note: The config.js file is in gitignore.
+ * Note: The frontend_config.json file is in gitignore.
 **/
 
 @Serializable

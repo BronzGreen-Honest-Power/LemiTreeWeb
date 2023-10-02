@@ -39,5 +39,6 @@ bin/
 .DS_Store
 
 ### Web config
-/src/**/resources/config.js
+/src/**/resources/frontend_config.json
+backend_config.json
 /kotlin-js-store/yarn.lock
