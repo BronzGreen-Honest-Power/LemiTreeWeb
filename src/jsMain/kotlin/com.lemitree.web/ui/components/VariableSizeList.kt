@@ -25,7 +25,7 @@ fun <T> VariableSizeList(
     LemiButton(
         text = "+",
         modifier = Modifier.width(40.dp),
-        onClicked = { onValueChange(fields.plus(null)) },
+        onClick = { onValueChange(fields.plus(null)) },
     )
     fields.forEachIndexed { index, item ->
         Row(

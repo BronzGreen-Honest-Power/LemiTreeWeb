@@ -3,6 +3,7 @@ package com.lemitree.web.ui.components
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -12,10 +13,14 @@ import androidx.compose.ui.graphics.Color
 fun LemiButton(
     modifier: Modifier = Modifier,
     text: String,
-    onClicked: () -> Unit,
+    onClick: () -> Unit,
 ) {
     Button(
-        onClick =  { onClicked() },
+        onClick = onClick,
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = MaterialTheme.colors.secondary,
+            contentColor = MaterialTheme.colors.onSecondary,
+        ),
         modifier = modifier,
     ) {
         Text(text)
@@ -31,9 +36,9 @@ fun <T> LemiSwitch(
 ) {
     var selected by remember { mutableStateOf(initial) }
     val (firstBtnBg, secondBtnBg) = when (selected) {
-        options.first.value -> Color.LightGray to Color.Gray
-        options.second.value -> Color.Gray to Color.LightGray //todo change light gray to alice blue
-        else -> Color.Gray to Color.Gray
+        options.first.value -> Color.Gray to MaterialTheme.colors.secondary
+        options.second.value -> MaterialTheme.colors.secondary to Color.Gray
+        else -> MaterialTheme.colors.secondary to MaterialTheme.colors.secondary
     }
     Row {
         Button(
