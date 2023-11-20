@@ -1,13 +1,13 @@
 import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
 import org.jetbrains.kotlin.gradle.targets.js.testing.KotlinJsTest
 
-val kotlinVersion = "1.9.0"
+val kotlinVersion = "1.9.20"
 val serializationVersion = "1.3.3"
 val ktorVersion = "2.2.2"
 val logbackVersion = "1.2.11"
 
 plugins {
-    kotlin("multiplatform") version "1.9.0"
+    kotlin("multiplatform") version "1.9.20"
     id("org.jetbrains.compose")
     kotlin("plugin.serialization") version "1.8.10"
     id("io.ktor.plugin") version "2.2.2"
