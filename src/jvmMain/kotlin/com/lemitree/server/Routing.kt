@@ -18,15 +18,24 @@ fun Application.routingSetup() {
             call.respond(HttpStatusCode.BadRequest)
         }
         get("/tree") {
+            /** Response: List of [com.lemitree.common.data.TreeItem] */
             processTree()
         }
         get("/tactics/{path...}") {
+            /** Response: Raw Markdown data, convertible to [com.lemitree.common.data.Tactic] */
             processTactics()
         }
         post("/tactic/{action}") {
+            /**
+             * Body: [com.lemitree.common.data.Tactic]
+             * Path argument: [com.lemitree.common.data.ContentAction]
+             * */
             processModifyTactic()
         }
         post("/category") {
+            /**
+             * Body: String (path)
+             * */
             processNewCategory() //todo allow editing existing
         }
         //todo error reporting
