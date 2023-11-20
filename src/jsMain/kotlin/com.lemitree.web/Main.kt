@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -20,6 +21,8 @@ import com.lemitree.web.ui.features.edit_content.EditTacticForm
 import com.lemitree.web.ui.features.tree_view.TacticTree
 import com.lemitree.web.ui.features.view_tactic.TacticView
 import com.lemitree.web.ui.theme.LemiTreeTheme
+import com.lemitree.web.ui.theme.LocalWindowSize
+import com.lemitree.web.ui.theme.WindowSize
 import kotlinx.browser.window
 import org.jetbrains.compose.web.renderComposable
 import org.jetbrains.skiko.wasm.onWasmReady
@@ -30,18 +33,23 @@ fun main() {
         modules(uiModule)
     }
     val viewModel: ViewModel = getKoinInstance()
+    val windowSize = WindowSize(height = window.innerHeight, width = window.innerWidth)
     onWasmReady {
         @OptIn(ExperimentalComposeUiApi::class)
         CanvasBasedWindow(title = "LemiTree") {
             LemiTreeTheme {
-                ComposeWebContent(viewModel)
+                CompositionLocalProvider(LocalWindowSize provides windowSize) {
+                    ComposeWebContent(viewModel)
+                }
             }
         }
     }
     // Utilising Compose HTML to use a simple markdown rendering tool.
     renderComposable(rootElementId = "root") {
         LemiTreeTheme {
-            ComposeHtmlContent(viewModel)
+            CompositionLocalProvider(LocalWindowSize provides windowSize) {
+                ComposeHtmlContent(viewModel)
+            }
         }
     }
 }
