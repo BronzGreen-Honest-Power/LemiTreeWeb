@@ -1,6 +1,7 @@
 package com.lemitree.web.ui.features.view_tactic
 
 import androidx.compose.runtime.Composable
+import com.lemitree.web.ui.theme.LocalWindowSize
 import org.jetbrains.compose.web.css.Color
 import org.jetbrains.compose.web.css.DisplayStyle
 import org.jetbrains.compose.web.css.LineStyle
@@ -23,6 +24,8 @@ import org.jetbrains.compose.web.dom.Div
 fun TacticView(
     mdText: String,
 ) {
+    val marginLeft = LocalWindowSize.current.leftColWidth.px
+    val documentWidth = LocalWindowSize.current.centerColWidth.px
     Div(
         attrs = {
             style {
@@ -33,14 +36,14 @@ fun TacticView(
                 backgroundColor(Color.aliceblue)
                 position(Position.Absolute)
                 marginTop(50.px)
-                marginLeft(400.px)
+                marginLeft(marginLeft)
                 overflow("scroll")
             }
         }
     ) {
         MarkDown(mdText) {
             style {
-                width(800.px)
+                width(documentWidth)
                 fontFamily("Arial")
             }
         }

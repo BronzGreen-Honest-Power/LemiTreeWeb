@@ -3,6 +3,7 @@ package com.lemitree.web.ui.features.edit_content
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.Button
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
@@ -12,6 +13,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.lemitree.common.helpers.replaceSpaces
 import com.lemitree.web.ui.components.LemiTextField
+import com.lemitree.web.ui.theme.LocalWindowSize
 
 @Composable
 fun EditCategoryForm(
@@ -20,7 +22,9 @@ fun EditCategoryForm(
 ) {
     var categoryName by remember { mutableStateOf(TextFieldValue("")) }
     val newPath = "${selectedPath}/${categoryName.text.replaceSpaces()}"
-    Column {
+    Column(
+        modifier = Modifier.width(LocalWindowSize.current.centerColWidthDp)
+    ) {
         Text("Path:")
         OutlinedTextField(
             value = newPath,

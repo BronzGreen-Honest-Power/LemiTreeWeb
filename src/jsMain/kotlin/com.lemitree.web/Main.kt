@@ -1,6 +1,5 @@
 package com.lemitree.web
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -63,7 +62,6 @@ fun ComposeWebContent(viewModel: ViewModel) {
     val isEditing by viewModel.isEditingTactic.collectAsState()
     val contentScrollState = rememberScrollState(0)
     Row(
-        horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(contentScrollState)

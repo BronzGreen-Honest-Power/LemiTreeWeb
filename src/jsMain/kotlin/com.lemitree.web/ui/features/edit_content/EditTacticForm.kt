@@ -3,6 +3,7 @@ package com.lemitree.web.ui.features.edit_content
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -12,6 +13,7 @@ import com.lemitree.common.data.Tactic
 import com.lemitree.web.ui.components.LemiButton
 import com.lemitree.web.ui.components.LemiTextField
 import com.lemitree.web.ui.components.asTextFieldState
+import com.lemitree.web.ui.theme.LocalWindowSize
 
 const val columnWidth = 800
 val textFieldModifier = Modifier
@@ -36,7 +38,9 @@ fun EditTacticForm(
             metadata = metadata,
         )
     }
-    Column {
+    Column(
+        modifier = Modifier.width(LocalWindowSize.current.centerColWidthDp)
+    ) {
         Text("Path:")
         LemiTextField(
             value = TextFieldValue("$selectedPath/${newTactic.fileName}"),

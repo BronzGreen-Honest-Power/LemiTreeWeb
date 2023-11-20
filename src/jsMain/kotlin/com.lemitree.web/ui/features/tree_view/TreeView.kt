@@ -1,10 +1,12 @@
 package com.lemitree.web.ui.features.tree_view
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -17,6 +19,7 @@ import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.unit.dp
 import com.lemitree.common.data.TreeItem
+import com.lemitree.web.ui.theme.LocalWindowSize
 
 @Composable
 fun TacticTree(
@@ -28,14 +31,15 @@ fun TacticTree(
     Column(
         modifier = Modifier
             .wrapContentHeight()
-            .width(300.dp)
+            .width(LocalWindowSize.current.leftColWidthDp)//todo
             .padding(padding.dp)
+            .background(MaterialTheme.colors.primary)
     ) {
         items.forEach {
             TreeItem(
                 item = it,
                 selectedPath = selectedPath,
-                onClickItem = onClickItem
+                onClickItem = onClickItem,
             )
         }
     }
@@ -47,7 +51,7 @@ private fun TreeItem(
     selectedPath: String?,
     onClickItem: (String) -> Unit,
 ) {
-    val textColor = if (selectedPath == item.path) Color.Blue else Color.Black
+    val textColor = MaterialTheme.colors.onPrimary//if (selectedPath == item.path) Color.Blue else Color.Black //todo
     var showChildren by remember { mutableStateOf(false) }
     Column {
         Text(
