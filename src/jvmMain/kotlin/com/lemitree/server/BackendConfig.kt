@@ -12,7 +12,7 @@ import java.io.File
 
 @Serializable
 data class BackendConfig(
-    val baseDir: String,
+    val baseDir: String, // Should point to the Human_Individual directory
     val port: Int,
 )
 
