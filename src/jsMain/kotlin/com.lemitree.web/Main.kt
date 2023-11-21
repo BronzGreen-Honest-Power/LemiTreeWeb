@@ -1,16 +1,23 @@
 package com.lemitree.web
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.CanvasBasedWindow
 import com.lemitree.common.helpers.getKoinInstance
 import com.lemitree.web.ui.components.LemiSwitch
@@ -23,6 +30,8 @@ import com.lemitree.web.ui.theme.LemiTreeTheme
 import com.lemitree.web.ui.theme.LocalWindowSize
 import com.lemitree.web.ui.theme.WindowSize
 import kotlinx.browser.window
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.web.renderComposable
 import org.jetbrains.skiko.wasm.onWasmReady
 import org.koin.core.context.GlobalContext.startKoin
@@ -53,6 +62,7 @@ fun main() {
     }
 }
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun ComposeWebContent(viewModel: ViewModel) {
     val mdText by viewModel.mdText.collectAsState()
@@ -61,17 +71,36 @@ fun ComposeWebContent(viewModel: ViewModel) {
     val tactic by viewModel.tactic.collectAsState()
     val isEditing by viewModel.isEditingTactic.collectAsState()
     val contentScrollState = rememberScrollState(0)
+    val treeScrollState = rememberScrollState(0)
     Row(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(contentScrollState)
     ) {
-        TacticTree(
-            items = tree,
-            selectedPath = selectedDirectory,
-            onClickItem = { viewModel.updatePath(it) },
-        )
-        Column {
+        Column(
+            modifier = Modifier
+                .height(LocalWindowSize.current.height.dp)
+                .background(color = MaterialTheme.colors.primary)
+                .verticalScroll(treeScrollState)
+        ) {
+            Image(
+                painter = painterResource("lemitree-logo.jpeg"),
+                contentDescription = null,
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(18.dp),
+            )
+            TacticTree(
+                items = tree,
+                selectedPath = selectedDirectory,
+                onClickItem = { viewModel.updatePath(it) },
+            )
+        }
+        Column(
+            modifier = Modifier
+                .background(color = MaterialTheme.colors.background)
+                .padding(18.dp)
+                .verticalScroll(contentScrollState)
+        ) {
             selectedDirectory?.let { path ->
                 if (mdText != null) {
                     LemiSwitch(
