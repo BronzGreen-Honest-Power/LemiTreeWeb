@@ -1,9 +1,11 @@
 package com.lemitree.web.ui.features.edit_content
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -11,6 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.lemitree.common.data.Benefit
 import com.lemitree.common.data.BulletPoint
@@ -18,15 +21,18 @@ import com.lemitree.common.data.Instruction
 import com.lemitree.common.data.Source
 import com.lemitree.common.data.TacticContent
 import com.lemitree.web.ui.components.LemiTextField
+import com.lemitree.web.ui.components.LemiFieldTitle
 import com.lemitree.web.ui.components.VariableSizeList
 import com.lemitree.web.ui.components.asTextFieldState
+import com.lemitree.web.ui.theme.LocalWindowSize
 
 @Composable
 fun TacticContentFields(
-    fieldWidth: Int,
     content: TacticContent,
     onTacticContentChanged: (TacticContent) -> Unit,
 ) {
+    val fieldWidth = LocalWindowSize.current.centerColWidth.dp
+    val textFieldModifier = Modifier.fillMaxWidth()
     var intro by content.intro.asTextFieldState()
     var why by content.why.asTextFieldState()
     var how by content.how.asTextFieldState()
@@ -36,7 +42,10 @@ fun TacticContentFields(
         onVideoChanged = { onTacticContentChanged(content.copy(videoLink = it)) },
         onAudioChanged = { onTacticContentChanged(content.copy(audioLink = it)) },
     )
-    Text("Introduction:")
+    LemiFieldTitle(
+        text = "Introduction:",
+        modifier = Modifier.padding(vertical = 8.dp)
+    )
     LemiTextField(
         value = intro,
         minLines = 2,
@@ -44,8 +53,12 @@ fun TacticContentFields(
             intro = it
             onTacticContentChanged(content.copy(intro = intro.text))
         },
+        modifier = textFieldModifier,
     )
-    Text("Why:")
+    LemiFieldTitle(
+        text = "Why:",
+        modifier = Modifier.padding(vertical = 8.dp)
+    )
     LemiTextField(
         value = why,
         minLines = 2,
@@ -53,13 +66,17 @@ fun TacticContentFields(
             why = it
             onTacticContentChanged(content.copy(why = why.text))
         },
+        modifier = textFieldModifier,
     )
     BenefitsFields(
         value = content.benefits,
         fieldWidth = fieldWidth,
         onValueChange = { onTacticContentChanged(content.copy(benefits = it)) }
     )
-    Text("How:")
+    LemiFieldTitle(
+        text = "How:",
+        modifier = Modifier.padding(vertical = 8.dp)
+    )
     LemiTextField(
         value = how,
         minLines = 2,
@@ -67,6 +84,7 @@ fun TacticContentFields(
             how = it
             onTacticContentChanged(content.copy(how = how.text))
         },
+        modifier = textFieldModifier,
     )
     InstructionsFields(
         value = content.instructions,
@@ -83,7 +101,7 @@ fun TacticContentFields(
 @Composable
 private fun BenefitsFields(
     value: List<Benefit>,
-    fieldWidth: Int,
+    fieldWidth: Dp,
     onValueChange: (List<Benefit>) -> Unit,
 ) {
     var fields by remember { mutableStateOf<List<Benefit?>>(value) }
@@ -103,7 +121,8 @@ private fun BenefitsFields(
                     benefitText = it
                     onFieldValueChanged(it.text)
                 },
-                modifier = Modifier.width(fieldWidth.dp)
+                modifier = Modifier
+                    .width(fieldWidth)
             )
         }
     )
@@ -112,7 +131,7 @@ private fun BenefitsFields(
 @Composable
 private fun InstructionsFields(
     value: List<Instruction>,
-    fieldWidth: Int,
+    fieldWidth: Dp,
     onValueChange: (List<Instruction>) -> Unit,
 ) {
     var fields by remember { mutableStateOf<List<Instruction?>>(value) }
@@ -125,6 +144,7 @@ private fun InstructionsFields(
     VariableSizeList(
         title = "Instructions:",
         fields = fields,
+        showFieldBorder = true,
         onValueChange = { fields = it },
         fieldContent = { instruction, onFieldValueChanged ->
             val newInstruction = instruction ?: Instruction.EMPTY
@@ -139,7 +159,10 @@ private fun InstructionsFields(
                         instructionTitle = it
                         onFieldValueChanged(newInstruction.copy(title = it.text))
                     },
-                    modifier = Modifier.width(fieldWidth.dp),
+                    modifier = Modifier
+                        .width(fieldWidth)
+                        .padding(vertical = 8.dp)
+                        .padding(end = 8.dp)
                 )
                 LemiTextField(
                     value = instructionText,
@@ -149,7 +172,9 @@ private fun InstructionsFields(
                         instructionText = it
                         onFieldValueChanged(newInstruction.copy(text = it.text))
                     },
-                    modifier = Modifier.width(fieldWidth.dp),
+                    modifier = Modifier
+                        .width(fieldWidth)
+                        .padding(end = 8.dp)
                 )
                 var bulletPoints by remember {
                     mutableStateOf<List<BulletPoint?>>(newInstruction.bulletPoints)
@@ -173,10 +198,13 @@ private fun InstructionsFields(
                                 bulletPointText = it
                                 onFieldValueChanged(it.text)
                             },
-                            modifier = Modifier.width(fieldWidth.dp),
+                            modifier = Modifier
+                                .width(fieldWidth)
+                                .padding(end = 8.dp)
                         )
                     }
                 )
+                Spacer(modifier = Modifier.height(4.dp))
             }
         }
     )
@@ -185,7 +213,7 @@ private fun InstructionsFields(
 @Composable
 private fun SourcesFields(
     value: List<Source>,
-    fieldWidth: Int,
+    fieldWidth: Dp,
     onValueChange: (List<Source>) -> Unit,
 ) {
     var fields by remember { mutableStateOf<List<Source?>>(value) }
@@ -198,10 +226,13 @@ private fun SourcesFields(
     VariableSizeList(
         title = "Sources:",
         fields = fields,
+        showFieldBorder = true,
         onValueChange = { fields = it },
         fieldContent = { source, onFieldValueChanged ->
             val newSource = source ?: Source.EMPTY
-            Row {
+            Column(
+                modifier = Modifier.padding(8.dp)
+            ) {
                 var sourceTitle by source?.title.asTextFieldState()
                 var sourceLink by source?.link.asTextFieldState()
                 LemiTextField(
@@ -211,8 +242,9 @@ private fun SourcesFields(
                         sourceTitle = it
                         onFieldValueChanged(newSource.copy(title = it.text))
                     },
-                    modifier = Modifier.width(fieldWidth.dp)
+                    modifier = Modifier.width(fieldWidth)
                 )
+                Spacer(modifier = Modifier.height(4.dp))
                 LemiTextField(
                     value = sourceLink,
                     hint = "Link",
@@ -220,7 +252,7 @@ private fun SourcesFields(
                         sourceLink = it
                         onFieldValueChanged(newSource.copy(link = it.text))
                     },
-                    modifier = Modifier.width(fieldWidth.dp)
+                    modifier = Modifier.width(fieldWidth)
                 )
             }
         }
@@ -234,31 +266,44 @@ private fun ExternalResourcesFields(
     onVideoChanged: (String) -> Unit,
     onAudioChanged: (String) -> Unit,
 ) {
+    val textFieldModifier = Modifier.fillMaxWidth()
     var infographicLink by content.infographicLink.asTextFieldState()
     var videoLink by content.videoLink.asTextFieldState()
     var audioLink by content.audioLink.asTextFieldState()
-    Text("Infographic:")
+    LemiFieldTitle(
+        text = "Infographic link:",
+        modifier = Modifier.padding(vertical = 8.dp)
+    )
     LemiTextField(
         value = infographicLink,
         onValueChange = {
             infographicLink = it
             onInfographicChanged(it.text)
-        }
+        },
+        modifier = textFieldModifier,
     )
-    Text("Video:")
+    LemiFieldTitle(
+        text = "Video link:",
+        modifier = Modifier.padding(vertical = 8.dp)
+    )
     LemiTextField(
         value = videoLink,
         onValueChange = {
             videoLink = it
             onVideoChanged(it.text)
         },
+        modifier = textFieldModifier,
     )
-    Text("Audio:")
+    LemiFieldTitle(
+        text = "Audio link:",
+        modifier = Modifier.padding(vertical = 8.dp)
+    )
     LemiTextField(
         value = audioLink,
         onValueChange = {
             audioLink = it
             onAudioChanged(it.text)
         },
+        modifier = textFieldModifier,
     )
 }

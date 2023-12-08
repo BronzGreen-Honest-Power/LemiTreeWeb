@@ -2,8 +2,10 @@ package com.lemitree.web.ui.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -23,6 +25,7 @@ import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import kotlinx.browser.window
@@ -36,6 +39,18 @@ fun Placeholder(
         text = text,
         fontStyle = FontStyle.Italic,
         modifier = Modifier.alpha(0.6F),
+    )
+}
+
+@Composable
+fun LemiFieldTitle(
+    text: String,
+    modifier: Modifier = Modifier,
+) {
+    Text(
+        text = text,
+        fontWeight = FontWeight.Bold,
+        modifier = modifier,
     )
 }
 
@@ -55,6 +70,7 @@ fun NumberOutlinedTextField(
             }
         },
         keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+        colors = TextFieldDefaults.textFieldColors(backgroundColor = MaterialTheme.colors.surface),
         modifier = modifier,
         placeholder = {
             Placeholder(hint)
@@ -98,6 +114,7 @@ fun LemiTextField(
             },
             readOnly = readOnly,
             minLines = minLines,
+            colors = TextFieldDefaults.textFieldColors(backgroundColor = MaterialTheme.colors.surface),
             modifier = modifier
                 .pointerHoverIcon(PointerIcon.Text)
         )

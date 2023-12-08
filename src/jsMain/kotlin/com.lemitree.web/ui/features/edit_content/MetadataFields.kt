@@ -2,7 +2,9 @@ package com.lemitree.web.ui.features.edit_content
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Checkbox
@@ -16,6 +18,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.lemitree.common.data.Energy
 import com.lemitree.common.data.EnergyCost
@@ -26,13 +30,15 @@ import com.lemitree.common.data.TacticMetadata
 import com.lemitree.common.data.TimeDuration
 import com.lemitree.web.ui.components.NumberOutlinedTextField
 import com.lemitree.web.ui.components.SimpleDropdownMenu
+import com.lemitree.web.ui.components.LemiFieldTitle
+import com.lemitree.web.ui.theme.LocalWindowSize
 
 @Composable
 fun MetadataFields(
-    fieldWidth: Int,
     data: TacticMetadata?,
     onMetadataChanged: (TacticMetadata?) -> Unit,
 ) {
+    val fieldWidth = LocalWindowSize.current.centerColWidthDp
     var frequency by remember { mutableStateOf(data?.frequency) }
     var timeDuration by remember { mutableStateOf(data?.timeDuration) }
     var expenses by remember { mutableStateOf(data?.expenses) }
@@ -47,22 +53,22 @@ fun MetadataFields(
         onMetadataChanged(newMetadata)
     }
     FrequencyFields(
-        fieldWidth = fieldWidth,
+        fieldWidth = fieldWidth / 2,
         frequency = frequency,
         onValueChanged = { frequency = it },
     )
     TimeDurationFields(
-        fieldWidth = fieldWidth,
+        fieldWidth = fieldWidth / 2,
         timeDuration = timeDuration,
         onValueChanged = { timeDuration = it },
     )
     ExpensesFields(
-        fieldWidth = fieldWidth,
+        fieldWidth = fieldWidth / 2,
         expenses = expenses,
         onValueChanged = { expenses = it },
     )
     EnergyFields(
-        fieldWidth = fieldWidth,
+        fieldWidth = fieldWidth / 2,
         energy = energy,
         onValueChanged = { energy = it },
     )
@@ -70,7 +76,7 @@ fun MetadataFields(
 
 @Composable
 private fun FrequencyFields(
-    fieldWidth: Int,
+    fieldWidth: Dp,
     frequency: Frequency?,
     onValueChanged: (Frequency?) -> Unit,
 ) {
@@ -83,26 +89,30 @@ private fun FrequencyFields(
             else null
         onValueChanged(newFrequency)
     }
-    Text("Frequency:")
+    LemiFieldTitle(
+        text = "Frequency:",
+        modifier = Modifier.padding(vertical = 8.dp),
+    )
     Row {
         SimpleDropdownMenu(
             items = FrequencyType.displayNames(),
             selected = frequencyType?.name,
             onItemSelected = { frequencyType = FrequencyType.fromString(it) },
-            modifier = Modifier.defaultMinSize(minWidth = fieldWidth.dp)
+            modifier = Modifier.defaultMinSize(minWidth = fieldWidth)
         )
+        Spacer(modifier = Modifier.width(4.dp))
         NumberOutlinedTextField(
             value = frequencyInterval?.toString() ?: "",
             onValueChange = { frequencyInterval = it },
             hint = "Interval",
-            modifier = Modifier.width(fieldWidth.dp),
+            modifier = Modifier.width(fieldWidth),
         )
     }
 }
 
 @Composable
 private fun TimeDurationFields(
-    fieldWidth: Int,
+    fieldWidth: Dp,
     timeDuration: TimeDuration?,
     onValueChanged: (TimeDuration?) -> Unit,
 ) {
@@ -115,26 +125,30 @@ private fun TimeDurationFields(
             else null
         onValueChanged(newTimeDuration)
     }
-    Text("Time duration:")
+    LemiFieldTitle(
+        text = "Time duration:",
+        modifier = Modifier.padding(vertical = 8.dp),
+    )
     Row {
         NumberOutlinedTextField(
             value = durationHours?.toString() ?: "",
             onValueChange = { durationHours = it },
             hint = "Hours",
-            modifier = Modifier.width(fieldWidth.dp),
+            modifier = Modifier.width(fieldWidth),
         )
+        Spacer(modifier = Modifier.width(4.dp))
         NumberOutlinedTextField(
             value = durationMinutes?.toString() ?: "",
             onValueChange = { durationMinutes = if (it != null && it > 59) 59 else it },
             hint = "Minutes",
-            modifier = Modifier.width(fieldWidth.dp),
+            modifier = Modifier.width(fieldWidth),
         )
     }
 }
 
 @Composable
 private fun ExpensesFields(
-    fieldWidth: Int,
+    fieldWidth: Dp,
     expenses: Expenses?,
     onValueChanged: (Expenses?) -> Unit,
 ) {
@@ -153,18 +167,22 @@ private fun ExpensesFields(
         }
         onValueChanged(newExpenses)
     }
-    Text("Expenses:")
+    LemiFieldTitle(
+        text = "Expenses:",
+        modifier = Modifier.padding(vertical = 8.dp),
+    )
     Column {
         Row(verticalAlignment = Alignment.CenterVertically) {
             NumberOutlinedTextField(
                 value = expensesAmount?.toString() ?: "",
                 onValueChange = { expensesAmount = it },
                 hint = "Cost in $ (round to whole number)",
-                modifier = Modifier.width(fieldWidth.dp),
+                modifier = Modifier.width(fieldWidth),
             )
             Text(
                 text = "Recurring expense?",
-                modifier = Modifier.padding(4.dp),
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(16.dp),
             )
             Checkbox(
                 checked = expensesRepeating,
@@ -174,18 +192,20 @@ private fun ExpensesFields(
             )
         }
         if (expensesRepeating) {
+            Spacer(modifier = Modifier.height(4.dp))
             Row {
                 SimpleDropdownMenu(
                     items = FrequencyType.displayNames(),
                     selected = expensesFrequencyType?.name,
                     onItemSelected = { expensesFrequencyType = FrequencyType.fromString(it) },
-                    modifier = Modifier.defaultMinSize(minWidth = fieldWidth.dp)
+                    modifier = Modifier.defaultMinSize(minWidth = fieldWidth)
                 )
+                Spacer(modifier = Modifier.width(4.dp))
                 NumberOutlinedTextField(
                     value = expensesFrequencyInterval?.toString() ?: "",
                     onValueChange = { expensesFrequencyInterval = it },
                     hint = "Interval",
-                    modifier = Modifier.width(fieldWidth.dp),
+                    modifier = Modifier.width(fieldWidth),
                 )
             }
         }
@@ -194,7 +214,7 @@ private fun ExpensesFields(
 
 @Composable
 private fun EnergyFields(
-    fieldWidth: Int,
+    fieldWidth: Dp,
     energy: Energy?,
     onValueChanged: (Energy?) -> Unit,
 ) {
@@ -207,24 +227,34 @@ private fun EnergyFields(
         )
         onValueChanged(newEnergy)
     }
-    Text("Energy:")
+    LemiFieldTitle(
+        text = "Energy:",
+        modifier = Modifier.padding(top = 8.dp)
+    )
     Row {
         Column {
-            Text("Physical:")
+            LemiFieldTitle(
+                text = "Physical:",
+                modifier = Modifier.padding(vertical = 8.dp),
+            )
             SimpleDropdownMenu(
                 items = EnergyCost.displayNames(),
                 selected = energy?.physicalCost?.name,
                 onItemSelected = { physicalEnergy = EnergyCost.fromString(it) },
-                modifier = Modifier.defaultMinSize(minWidth = fieldWidth.dp),
+                modifier = Modifier.defaultMinSize(minWidth = fieldWidth),
             )
         }
+        Spacer(modifier = Modifier.width(4.dp))
         Column {
-            Text("Mental:")
+            LemiFieldTitle(
+                text = "Mental:",
+                modifier = Modifier.padding(vertical = 8.dp),
+            )
             SimpleDropdownMenu(
                 items = EnergyCost.displayNames(),
                 selected = energy?.mentalCost?.name,
                 onItemSelected = { mentalEnergy = EnergyCost.fromString(it) },
-                modifier = Modifier.defaultMinSize(minWidth = fieldWidth.dp),
+                modifier = Modifier.defaultMinSize(minWidth = fieldWidth),
             )
         }
     }
