@@ -17,7 +17,10 @@ data class FrontendConfig(
 )
 
 fun loadFrontendConfig(): FrontendConfig {
-    val config = try { Json.decodeFromString<FrontendConfig>(JSON.stringify(getConfig())) } catch (e: Exception) {
+    val config = try {
+        val jsConfig = getConfig()
+        Json.decodeFromString<FrontendConfig>(JSON.stringify(jsConfig))
+    } catch (e: Exception) {
         error("resources/frontend_config.json file is malformed or missing.")
     }
     return config
