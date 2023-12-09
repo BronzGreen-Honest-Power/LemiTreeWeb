@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
@@ -22,6 +23,7 @@ import androidx.compose.ui.window.CanvasBasedWindow
 import com.lemitree.common.helpers.getKoinInstance
 import com.lemitree.web.ui.components.LemiSwitch
 import com.lemitree.web.ui.components.SwitchButton
+import com.lemitree.web.ui.features.contributor_section.ContributorSection
 import com.lemitree.web.ui.features.edit_content.AddContent
 import com.lemitree.web.ui.features.edit_content.EditTacticForm
 import com.lemitree.web.ui.features.tree_view.TacticTree
@@ -97,6 +99,7 @@ fun ComposeWebContent(viewModel: ViewModel) {
         }
         Column(
             modifier = Modifier
+                .width(LocalWindowSize.current.centerColWidthDp)
                 .background(color = MaterialTheme.colors.background)
                 .padding(18.dp)
                 .verticalScroll(contentScrollState)
@@ -140,4 +143,5 @@ fun ComposeHtmlContent(viewModel: ViewModel) {
             TacticView(mdText!!)
         }
     }
+    ContributorSection()
 }

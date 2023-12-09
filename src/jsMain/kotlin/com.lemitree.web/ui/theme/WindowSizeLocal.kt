@@ -18,11 +18,11 @@ data class WindowSize(
     val widthDp: Dp
         @Composable get() = width.dp
     val centerColWidth: Double // Px
-        get() = (width * 0.55)
+        get() = (width * 0.57)
     val leftColWidth: Double // Px
         get() = (width * 0.23)
     val rightColWidth: Double // Px
-        get() = (width * 0.22)
+        get() = (width * 0.20)
     val centerColWidthDp: Dp
         @Composable get() = centerColWidth.dp
     val leftColWidthDp: Dp
