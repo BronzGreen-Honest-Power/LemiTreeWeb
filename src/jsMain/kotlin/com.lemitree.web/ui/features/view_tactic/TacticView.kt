@@ -21,9 +21,9 @@ fun TacticView(
     mdText: String,
 ) {
     val marginLeft = LocalWindowSize.current.leftColWidth
-    val documentWidth = LocalWindowSize.current.centerColWidth
-    val topMenuHeight = LocalWindowSize.current.topMenuHeight
     val documentPadding = 25
+    val documentWidth = LocalWindowSize.current.centerColWidth - (documentPadding * 2)
+    val topMenuHeight = LocalWindowSize.current.topMenuHeight
     val documentHeight = LocalWindowSize.current.height - topMenuHeight - documentPadding
     Div(
         attrs = {

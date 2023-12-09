@@ -35,9 +35,7 @@ fun EditTacticForm(
     val textFieldModifier = Modifier
         .fillMaxWidth()
         .padding(vertical = 4.dp)
-    Column(
-        modifier = Modifier.width(LocalWindowSize.current.centerColWidthDp)
-    ) {
+    Column {
         LemiFieldTitle(
             text = "Path:",
             modifier = Modifier.padding(vertical = 8.dp)
