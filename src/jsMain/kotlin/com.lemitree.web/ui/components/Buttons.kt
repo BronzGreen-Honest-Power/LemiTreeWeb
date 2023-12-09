@@ -40,7 +40,9 @@ fun <T> LemiSwitch(
         options.second.value -> MaterialTheme.colors.secondary to Color.Gray
         else -> MaterialTheme.colors.secondary to MaterialTheme.colors.secondary
     }
-    Row {
+    Row(
+        modifier = modifier,
+    ) {
         Button(
             onClick = {
                 selected = options.first.value

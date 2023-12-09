@@ -20,15 +20,19 @@ data class WindowSize(
     val centerColWidth: Double // Px
         get() = (width * 0.55)
     val leftColWidth: Double // Px
-        get() = (width * 0.25)
+        get() = (width * 0.23)
     val rightColWidth: Double // Px
-        get() = (width * 0.20)
+        get() = (width * 0.22)
     val centerColWidthDp: Dp
         @Composable get() = centerColWidth.dp
     val leftColWidthDp: Dp
         @Composable get() = leftColWidth.dp
     val rightColWidthDp: Dp
         @Composable get() = rightColWidth.dp
+    val topMenuHeight: Int
+        @Composable get() = 80
+    val topMenuHeightDp: Dp
+        @Composable get() = topMenuHeight.dp
 }
 
 val LocalWindowSize = staticCompositionLocalOf { WindowSize(0, 0) }

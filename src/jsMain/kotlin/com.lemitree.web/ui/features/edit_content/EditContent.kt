@@ -1,10 +1,16 @@
 package com.lemitree.web.ui.features.edit_content
 
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.height
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.lemitree.common.data.Tactic
 import com.lemitree.web.ui.components.LemiSwitch
 import com.lemitree.web.ui.components.SwitchButton
+import com.lemitree.web.ui.theme.LocalWindowSize
 
 enum class ElementType { TACTIC, CATEGORY }
 
@@ -20,7 +26,7 @@ fun AddContent(
         options = SwitchButton(ElementType.TACTIC, "New tactic") to
                 SwitchButton(ElementType.CATEGORY, "New category"),
         initial = selected,
-        modifier = Modifier, //todo
+        modifier = Modifier.height(LocalWindowSize.current.topMenuHeightDp),
         onSwitchClicked = { selected = it },
     )
     when (selected) {
